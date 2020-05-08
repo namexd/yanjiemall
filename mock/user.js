@@ -46,6 +46,19 @@ export default [
       }
     }
   },
+  {
+    url: '/vue-element-admin/user/index',
+    type: 'get',
+    response: config => {
+      return {
+        code: 20000,
+        data: {
+          count:4564,
+          pay:2367
+        }
+      }
+    }
+  },
 
   // get user info
   {

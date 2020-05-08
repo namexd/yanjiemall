@@ -14,7 +14,7 @@ const name = defaultSettings.title || 'vue Element Admin' // page title
 // You can change the port by the following method:
 // port = 9527 npm run dev OR npm run dev --port = 9527
 const port = process.env.port || process.env.npm_config_port || 9527 // dev port
-
+let target = 'http://climate.sublab.cn/api';
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -29,14 +29,42 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
-  devServer: {
-    port: port,
-    open: true,
-    overlay: {
-      warnings: false,
-      errors: true
-    },
-    before: require('./mock/mock-server.js')
+  // devServer: {
+  //   port: port,
+  //   open: true,
+  //   overlay: {
+  //     warnings: false,
+  //     errors: true
+  //   },
+  //   before: require('./mock/mock-server.js')
+  // },
+  devServer: {
+    open: false,      //打开页面
+    host: 'localhost',   //域名   127.0.0.0本机    0.0.0.0真机测试
+    port: port,     //端口号
+    https: false,    //是否使用https
+    hotOnly: false,  //热更新
+    proxy: {
+      //配置跨域
+      '/': {
+        //target: 'http://192.168.1.123:80/api',   //协议头、域名、端口号有一个不同就是跨域
+        target: 'http://testadmin.yanjiemall.com',   //协议头、域名、端口号有一个不同就是跨域
+        ws: true,      //是否跨域
+        changOrigin: true,
+        pathRewrite: {
+          '^/': ''
+        }
+      },
+      '/32432': {
+        //target: 'http://192.168.1.123:80/api',   //协议头、域名、端口号有一个不同就是跨域
+        target: 'http://testadmin.yanjiemall.com',   //协议头、域名、端口号有一个不同就是跨域
+        ws: true,      //是否跨域
+        changOrigin: true,
+        pathRewrite: {
+          '^/32432': ''
+        }
+      },
+    }
   },
   configureWebpack: {
     // provide the app's title in webpack's name field, so that

@@ -1,4 +1,7 @@
-import { asyncRoutes, constantRoutes } from '@/router'
+import router, { asyncRoutes, constantRoutes } from '@/router'
+import usersRouters from '@/router/modules/users'
+import goodsRouters from '@/router/modules/goods'
+import ordersRouters from '@/router/modules/orders'
 
 /**
  * Use meta.role to determine if the current user has permission
@@ -43,6 +46,10 @@ const mutations = {
   SET_ROUTES: (state, routes) => {
     state.addRoutes = routes
     state.routes = constantRoutes.concat(routes)
+  },
+  CHANGE_HIDDEN: (state, routes) => {
+    state.addRoutes = routes
+    state.routes = constantRoutes.concat(routes)
   }
 }
 
@@ -56,6 +63,29 @@ const actions = {
         accessedRoutes = filterAsyncRoutes(asyncRoutes, roles)
       }
       commit('SET_ROUTES', accessedRoutes)
+      resolve(accessedRoutes)
+    })
+  },
+
+  changeHidden({ commit }, key) {
+    return new Promise(resolve => {
+      let accessedRoutes
+
+        switch (key) {
+          case 'users':
+            accessedRoutes = [usersRouters]
+            break
+          case 'goods':
+            accessedRoutes = [goodsRouters]
+            break
+          case 'orders':
+            accessedRoutes = [ordersRouters]
+            break
+          default :
+            accessedRoutes = []
+        }
+
+      commit('CHANGE_HIDDEN', accessedRoutes)
       resolve(accessedRoutes)
     })
   }
