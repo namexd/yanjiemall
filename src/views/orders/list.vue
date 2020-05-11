@@ -70,39 +70,26 @@
       </el-form>
 
     </div>
+
     <el-table ref="dragTable" v-loading="listLoading" :data="orderList" row-key="id" fit highlight-current-row
               style="width: 100%;margin-top:30px;"
               :span-method="arraySpanMethod" border
     >
+      <el-table-column align="center" label="订单编号">
+        <template slot-scope="scope">
+          {{ scope.row.order_no }}
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="订单商品信息" width="220">
         <template slot-scope="scope">
-          <div class="title">订单编号：{{scope.row.order_no}}
-
-          </div>
-          <div style="margin-top: 25px">
-            <el-table
-              :data="scope.row.goods"
-              style="width: 100%"
-              :show-header="false"
-            >
-              <el-table-column align="left">
-                <template slot-scope="scope">
-                  <img :src="scope.row.goods_cover_pic" alt="">
-                </template>
-              </el-table-column>
-              <el-table-column align="left">
-                <template slot-scope="scope">
-                  {{scope.row.goods_name}}<br>
-                  {{scope.row.sku_name}}
-                </template>
-              </el-table-column>
-              <el-table-column align="left">
-                <template slot-scope="scope">
-                  x{{scope.row.price}}<br>
-                  x{{scope.row.sku_name}}
-                </template>
-              </el-table-column>
-            </el-table>
+          <div>
+            <el-row v-for="good in scope.row.goods" style="border-bottom: 1px solid #dfe6ec">
+              <el-col :span="8"><div class="grid-content bg-purple">  <img :src="good.goods_cover_pic" alt=""></div></el-col>
+              <el-col :span="8"><div class="grid-content bg-purple">  {{good.goods_name}}<br>
+                {{good.sku_name}}</div></el-col>
+              <el-col :span="8"><div class="grid-content bg-purple"> x{{good.price}}<br>
+                x{{good.sku_name}}</div></el-col>
+            </el-row>
           </div>
         </template>
       </el-table-column>
@@ -111,11 +98,7 @@
           {{scope.row.price}}
         </template>
       </el-table-column>
-      <el-table-column align="center" label="维权">
-        <template slot-scope="scope">
-          {{ scope.row.left_stock }}
-        </template>
-      </el-table-column>
+
       <el-table-column align="center" label="订单总价">
         <template slot-scope="scope">
           {{ scope.row.total_price }}<br>
@@ -141,7 +124,7 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button type="text" size="mini"  @click="handleEdit(scope)">
+          <el-button type="text" size="mini" @click="handleEdit(scope)">
             查看详情
           </el-button>
           <div v-if="scope.row.status==1">
@@ -284,10 +267,10 @@
           page: 1,
           per_page: 20
         },
-        expressForm:{
-          id:0,
-          express_company:'',
-          express_no:'',
+        expressForm: {
+          id: 0,
+          express_company: '',
+          express_no: ''
         }
       }
     },
@@ -296,9 +279,9 @@
     },
     methods: {
       arraySpanMethod({ row, column, rowIndex, columnIndex }) {
-        if (columnIndex === 0) {
+        if (columnIndex === 1) {
           return [1, 2]
-        } else if (columnIndex === 1) {
+        } else if (columnIndex === 2) {
           return [0, 0]
         }
       },
@@ -353,15 +336,14 @@
             console.error(err)
           })
       },
-      handelExpressOrder(id){
-      this.dialogFormVisible = true
-        this.expressForm.id=id;
+      handelExpressOrder(id) {
+        this.dialogFormVisible = true
+        this.expressForm.id = id
       },
-      postExpress()
-      {
-        let id=this.expressForm.id;
+      postExpress() {
+        let id = this.expressForm.id
         delete this.expressForm.id
-        expressOrder(id,this.expressForm).then(res=>{
+        expressOrder(id, this.expressForm).then(res => {
           if (res.code == 0) {
             this.dialogFormVisible = false
             this.$notify({
@@ -386,16 +368,5 @@
     .permission-tree {
       margin-bottom: 30px;
     }
-  }
-
-  .title {
-    width: 401%;
-    position: absolute;
-    z-index: 1;
-    background: #e9e9e9;
-    text-align: left;
-    padding: 5px;
-    top: 0;
-    left: 0;
   }
 </style>

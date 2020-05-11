@@ -3,17 +3,18 @@ import Layout from '@/layout'
 const goodsRouters = {
   path: '/goods',
   component: Layout,
-  redirect: '/goods/list/index?status=1',
+  redirect: '/goods/list/selling',
+  name:'goods',
   meta: {
     title: '商品',
-    icon: 'order'
+    icon: '商品'
   },
   children: [
     {
       path: 'list',
       component: () => import('@/views/goods/index'),
       name: 'goodsList',
-      meta: { title: '商品管理', icon: 'order' },
+      meta: { title: '商品管理', icon: '商品2' },
       children: [
         {
           path: 'selling',

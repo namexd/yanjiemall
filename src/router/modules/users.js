@@ -6,6 +6,7 @@ const usersRouters = {
   path: '/users',
   component: Layout,
   redirect: '/users/index',
+  name: 'users',
   meta: {
     title: '会员',
     icon: 'peoples'
@@ -14,7 +15,7 @@ const usersRouters = {
     {
       path: 'index',
       component: () => import('@/views/users/index'),
-      name: 'users',
+      name: 'userIndex',
       meta: { title: '会员概览',icon: 'list' }
     },
     {

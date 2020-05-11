@@ -37,6 +37,10 @@ import settingsRouters from '@/router/modules/settings'
  * all roles can be accessed
  */
 export const constantRoutes = [
+  usersRouters,
+  goodsRouters,
+  ordersRouters,
+  settingsRouters,
   {
     path: '/',
     component: Layout,
@@ -50,10 +54,6 @@ export const constantRoutes = [
       }
     ]
   },
-  usersRouters,
-  goodsRouters,
-  ordersRouters,
-  settingsRouters,
   // {
   //   path: '/test',
   //   component: () => import('@/views/test'),
@@ -91,6 +91,11 @@ export const constantRoutes = [
   },
 
 ]
+export const settingsRouter = [settingsRouters]
+export const goodsRouter = [goodsRouters]
+export const ordersRouter = [ordersRouters]
+export const usersRouter = [usersRouters]
+
 
 /**
  * asyncRoutes

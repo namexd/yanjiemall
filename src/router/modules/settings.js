@@ -3,6 +3,7 @@ import Layout from '@/layout'
 const settingsRouters = {
   path: '/settings',
   component: Layout,
+  redirect:'/settings/banners',
   name: 'settings',
   meta: {
     title: '设置',

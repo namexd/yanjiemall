@@ -55,15 +55,6 @@ module.exports = {
           '^/': ''
         }
       },
-      '/32432': {
-        //target: 'http://192.168.1.123:80/api',   //协议头、域名、端口号有一个不同就是跨域
-        target: 'http://testadmin.yanjiemall.com',   //协议头、域名、端口号有一个不同就是跨域
-        ws: true,      //是否跨域
-        changOrigin: true,
-        pathRewrite: {
-          '^/32432': ''
-        }
-      },
     }
   },
   configureWebpack: {

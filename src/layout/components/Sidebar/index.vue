@@ -5,14 +5,14 @@
       <el-menu
         :default-active="activeMenu"
         :collapse="isCollapse"
-        :background-color="variables.menuBg"
-        :text-color="variables.menuText"
         :unique-opened="false"
-        :active-text-color="variables.menuActiveText"
         :collapse-transition="false"
         mode="vertical"
+        background-color="#000"
+        text-color="#fff"
+        active-text-color="#ffd04b"
       >
-        <sidebar-item v-for="route in permission_routes" :key="route.path" :item="route" :base-path="route.path" />
+        <sidebar-item v-for="route in routes" :key="route.path" :item="route" :base-path="route.path" />
       </el-menu>
     </el-scrollbar>
   </div>
@@ -23,14 +23,31 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
+import { goodsRouter, ordersRouter, settingsRouter, usersRouter } from '../../../router'
+import Layout from '@/layout'
 
+const DefaultRoutes=[
+  {
+    path: '/',
+    component: Layout,
+    redirect: '/index',
+    children: [
+      {
+        path: 'index',
+        component: () => import('@/views/dashboard/index'),
+        name: 'index',
+        meta: { title: '首页', icon: 'dashboard', affix: true }
+      }
+    ]
+  }]
 export default {
   components: { SidebarItem, Logo },
   computed: {
     ...mapGetters([
-      'permission_routes',
+      // 'permission_routes',
       'sidebar'
     ]),
+
     activeMenu() {
       const route = this.$route
       const { meta, path } = route
@@ -48,6 +65,47 @@ export default {
     },
     isCollapse() {
       return !this.sidebar.opened
+    }
+  },
+  data() {
+    return{
+      routes:[],
+      DefaultRoutes
+    }
+  },
+  methods: {
+    setNav(val){
+      switch (val) {
+        case 'index':
+          this.routes = DefaultRoutes
+          break
+          case 'users':
+          this.routes = usersRouter
+          break
+        case 'goods':
+          this.routes = goodsRouter
+          break
+        case 'orders':
+          this.routes = ordersRouter
+          break
+        case 'settings':
+          this.routes = settingsRouter
+          break
+      }
+    }
+  },
+  created(){
+    const pathname = window.location.hash
+    const route=(pathname.split('/'))[1]
+    this.setNav(route);
+  },
+  watch:{
+    $route: {
+      handler: function(val, oldVal){
+        this.setNav(val.query.type);
+      },
+      // 深度观察监听
+      deep: true
     }
   }
 }

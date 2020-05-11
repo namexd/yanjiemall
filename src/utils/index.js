@@ -356,14 +356,3 @@ export function removeClass(ele, cls) {
     ele.className = ele.className.replace(reg, ' ')
   }
 }
-
-export function getMenu(menu) {
-
-  const pathname = window.location.hash
-  const urlName = (pathname.split('/'))[1]
-  if (menu == urlName) {
-    return  false
-  } else {
-    return  true
-  }
-}
