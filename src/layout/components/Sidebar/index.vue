@@ -23,7 +23,7 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
-import { goodsRouter, ordersRouter, settingsRouter, usersRouter } from '../../../router'
+import { goodsRouter, mineralsRouter, ordersRouter, settingsRouter, usersRouter } from '../../../router'
 import Layout from '@/layout'
 
 const DefaultRoutes=[
@@ -87,6 +87,9 @@ export default {
           break
         case 'orders':
           this.routes = ordersRouter
+          break
+        case 'minerals':
+          this.routes = mineralsRouter
           break
         case 'settings':
           this.routes = settingsRouter

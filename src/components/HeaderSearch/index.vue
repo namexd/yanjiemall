@@ -22,6 +22,7 @@
 // make search results more in line with expectations
 import Fuse from 'fuse.js'
 import path from 'path'
+import { constantRoutes } from '../../router'
 
 export default {
   name: 'HeaderSearch',
@@ -36,7 +37,7 @@ export default {
   },
   computed: {
     routes() {
-      return this.$store.getters.permission_routes
+      return constantRoutes;
     }
   },
   watch: {
@@ -70,7 +71,8 @@ export default {
       this.show = false
     },
     change(val) {
-      this.$router.push(val.path)
+      this.$router.push({path:val.path})
+      window.location.reload()
       this.search = ''
       this.options = []
       this.$nextTick(() => {
