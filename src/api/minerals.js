@@ -43,3 +43,74 @@ export function getAppeals(query) {
     params: query
   })
 }
+
+export function appealDistribute(id,data) {
+  return request({
+    url: `/mine/appeal/distribute/${id}`,
+    method: 'post',
+    data
+  })
+}
+
+export function getAppoints(query) {
+  return request({
+    url: '/mine/appoint',
+    method: 'get',
+    params: query
+  })
+}
+export function getTransfers(query) {
+  return request({
+    url: '/mine/transfer',
+    method: 'get',
+    params: query
+  })
+}
+export function getPoints(query) {
+  return request({
+    url: '/mine/point',
+    method: 'get',
+    params: query
+  })
+}
+
+export function postPoints(data) {
+  return request({
+    url: '/mine/point',
+    method: 'post',
+    data
+  })
+}
+
+export function getExchanges(query) {
+  return request({
+    url: '/mine/exchange',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getHolds(query) {
+  return request({
+    url: '/mine/hold',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getRollouts(query) {
+  return request({
+    url: '/mine/rollout',
+    method: 'get',
+    params: query
+  })
+}
+
+export function getFissions(query) {
+  return request({
+    url: '/mine/fission',
+    method: 'get',
+    params: query
+  })
+}
+

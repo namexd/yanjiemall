@@ -18,19 +18,26 @@ const mineralsRouters = {
     },
     {
       path: 'todaySale',
-      component: () => import('@/views/minerals/product/list'),
+      component: () => import('@/views/minerals/transfer/index'),
       name: 'mineralsTodaySale',
       meta: { title: '今日出售', icon: '出售' }
     },
      {
       path: 'appoint',
-      component: () => import('@/views/minerals/product/list'),
+      component: () => import('@/views/minerals/appoint/index'),
       name: 'mineralsAppoint',
       meta: { title: '预约列表', icon: '预约' }
     },
     {
+      path: 'point',
+      component: () => import('@/views/minerals/transfer/point'),
+      name: 'mineralsPoint',
+      hidden:true,
+      meta: { title: '指定账号', icon: '预约' }
+    },
+    {
       path: 'business',
-      component: () => import('@/views/minerals/product/list'),
+      component: () => import('@/views/minerals/exchange/index'),
       name: 'mineralsBusiness',
       meta: { title: '交易管理', icon: '交易' }
     },
@@ -42,19 +49,19 @@ const mineralsRouters = {
     },
     {
       path: 'users',
-      component: () => import('@/views/goods/category'),
+      component: () => import('@/views/minerals/hold/index'),
       name: 'mineralsUsers',
       meta: { title: '持有中会员列表', icon: 'peoples' }
     },
     {
       path: 'outside',
-      component: () => import('@/views/goods/category'),
+      component: () => import('@/views/minerals/rollout/index'),
       name: 'mineralsOutside',
       meta: { title: '转出记录', icon: '转出' }
     },
     {
       path: 'destroy',
-      component: () => import('@/views/goods/category'),
+      component: () => import('@/views/minerals/fission/index'),
       name: 'mineralsDestroy',
       meta: { title: '销毁的券', icon: '销毁' }
     },

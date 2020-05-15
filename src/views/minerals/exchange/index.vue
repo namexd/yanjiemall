@@ -4,31 +4,21 @@
       <el-form :model="listQuery" >
         <el-row>
           <el-col :span="5">
-            <el-form-item label="预约人账号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.mobile" placeholder="请输入预约人账号" style="width: 200px;" class="filter-item"
+            <el-form-item label="出售人账号" class="postInfo-container-item">
+              <el-input clearable v-model="listQuery.seller_mobile" placeholder="请输入出售人账号" style="width: 200px;" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="挖矿券:" class="postInfo-container-item">
-              <el-select v-model="listQuery.product_id" placeholder="请选择" clearable class="filter-item" style="width: 130px">
-                <el-option v-for="item in productList" :key="item.id" :label="item.product_title"
-                           :value="item.id"/>
-              </el-select>
+            <el-form-item label="买家账号:" class="postInfo-container-item">
+              <el-input clearable v-model="listQuery.buyer_mobile" placeholder="请输入买家账号" style="width: 200px;" class="filter-item"
+                        @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
           <el-col :span="4">
-            <el-form-item label="状态:" class="postInfo-container-item">
-              <el-select v-model="listQuery.state" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+            <el-form-item label="交易状态:" class="postInfo-container-item">
+              <el-select v-model="listQuery.status" placeholder="请选择" clearable class="filter-item" style="width: 130px">
                 <el-option v-for="item in stateTypes" :key="item.key" :label="item.display_name"
-                           :value="item.key"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="类型:" class="postInfo-container-item">
-              <el-select v-model="listQuery.type" placeholder="请选择" clearable class="filter-item" style="width: 130px">
-                <el-option v-for="item in appointTypes" :key="item.key" :label="item.display_name"
                            :value="item.key"/>
               </el-select>
             </el-form-item>
@@ -42,9 +32,14 @@
       </el-form>
 
     </div>
-    <el-table ref="dragTable" v-loading="listLoading" :data="appointList" row-key="id" fit highlight-current-row
+    <el-table ref="dragTable" v-loading="listLoading" :data="exchangetList" row-key="id" fit highlight-current-row
               style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="预约账号" width="220">
+      <el-table-column align="center" label="出售人账号" width="220">
+        <template slot-scope="scope">
+          {{ scope.row.seller_mobile }}
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="买家账号" width="220">
         <template slot-scope="scope">
           {{ scope.row.mobile }}
         </template>
@@ -54,29 +49,46 @@
           {{scope.row.product_title}}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="预约时间">
+      <el-table-column align="header-center" label="价格">
+        <template slot-scope="scope">
+          {{ scope.row.price }}
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="付款凭证">
+        <template slot-scope="scope">
+          <div class="demo-image__preview">
+            <el-image
+              lazy
+              style="width: 100px; height: 100px"
+              :src=" scope.row.voucher"
+              :preview-src-list="[scope.row.voucher]">
+            </el-image>
+          </div>
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="交易状态">
+        <template slot-scope="scope">
+          {{ scope.row.status|stateTypeFilter }}
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="购买时间">
         <template slot-scope="scope">
           {{ scope.row.create_at }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="类型">
+      <el-table-column align="header-center" label="成交时间">
         <template slot-scope="scope">
-          {{ scope.row.type|appointTypeFilter }}
-        </template>
-      </el-table-column>
-      <el-table-column align="header-center" label="券状态">
-        <template slot-scope="scope">
-          {{ scope.row.state|stateTypeFilter }}
+          {{ scope.row.seller_confirm_at }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>
+<!--          <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>-->
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.per_page"
-                @pagination="getAppoints"/>
+                @pagination="getExchanges"/>
 
   </div>
 </template>
@@ -86,21 +98,15 @@
   import waves from '@/directive/waves' // waves directive
 
   import {
-    getAppoints,
+    getExchanges,
     getMinerals
   } from '../../../api/minerals'
 
   const stateTypes = [
-    { key: 1, display_name: '预约中' },
-    { key: 2, display_name: '抢券中' },
-    { key: 3, display_name: '抢购成功' },
-    { key: 4, display_name: '抢购失败' },
-  ]
-  const appointTypes = [
-    { key: 1, display_name: '预约' },
-    { key: 2, display_name: '预约后抢购' },
-    { key: 3, display_name: '抢购' },
-    { key: 4, display_name: '预约未抢购' },
+    { key: 1, display_name: '待付款' },
+    { key: 2, display_name: '已付款' },
+    { key: 3, display_name: '已完成' },
+    { key: 4, display_name: '已关闭' },
   ]
 
   const stateTypeKeyValue = stateTypes.reduce((acc, cur) => {
@@ -108,30 +114,20 @@
     return acc
   }, {})
 
-  const appointTypeKeyValue = appointTypes.reduce((acc, cur) => {
-    acc[cur.key] = cur.display_name
-    return acc
-  }, {})
-
-
   export default {
     components: { Pagination },
     directives: { waves },
     filters:{
-      appointTypeFilter(type){
-        return appointTypeKeyValue[type]
-      } ,
       stateTypeFilter(type){
-        return stateTypeKeyValue[type]
+        return stateTypeKeyValue[type]?stateTypeKeyValue[type]:'未知'
       }
     },
     data() {
       return {
         stateTypes,
-        appointTypes,
         productList: [],
         total: 0,
-        appointList:[],
+        exchangetList:[],
         listLoading: true,
         listQuery: {
           page: 1,
@@ -140,17 +136,17 @@
       }
     },
     created() {
-      this.getAppoints()
+      this.getExchanges()
       this.getMinerals()
     },
     methods: {
       handleFilter() {
         this.listQuery.page = 1
-        this.getAppoints()
+        this.getExchanges()
       },
-      async getAppoints() {
-        const res = await getAppoints(this.listQuery)
-        this.appointList = res.data.items
+      async getExchanges() {
+        const res = await getExchanges(this.listQuery)
+        this.exchangetList = res.data.items
         this.total = res.data._meta.total_count
         this.listLoading = false
       },

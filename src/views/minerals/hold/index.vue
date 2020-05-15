@@ -4,8 +4,8 @@
       <el-form :model="listQuery" >
         <el-row>
           <el-col :span="5">
-            <el-form-item label="预约人账号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.mobile" placeholder="请输入预约人账号" style="width: 200px;" class="filter-item"
+            <el-form-item label="账号" class="postInfo-container-item">
+              <el-input clearable v-model="listQuery.mobile" placeholder="请输入手机号" style="width: 200px;" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
@@ -19,16 +19,8 @@
           </el-col>
           <el-col :span="4">
             <el-form-item label="状态:" class="postInfo-container-item">
-              <el-select v-model="listQuery.state" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+              <el-select v-model="listQuery.status" placeholder="请选择" clearable class="filter-item" style="width: 130px">
                 <el-option v-for="item in stateTypes" :key="item.key" :label="item.display_name"
-                           :value="item.key"/>
-              </el-select>
-            </el-form-item>
-          </el-col>
-          <el-col :span="4">
-            <el-form-item label="类型:" class="postInfo-container-item">
-              <el-select v-model="listQuery.type" placeholder="请选择" clearable class="filter-item" style="width: 130px">
-                <el-option v-for="item in appointTypes" :key="item.key" :label="item.display_name"
                            :value="item.key"/>
               </el-select>
             </el-form-item>
@@ -42,41 +34,56 @@
       </el-form>
 
     </div>
-    <el-table ref="dragTable" v-loading="listLoading" :data="appointList" row-key="id" fit highlight-current-row
+    <el-table ref="dragTable" v-loading="listLoading" :data="holdList" row-key="id" fit highlight-current-row
               style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="预约账号" width="220">
+      <el-table-column align="center" label="账号" width="220">
         <template slot-scope="scope">
           {{ scope.row.mobile }}
         </template>
       </el-table-column>
       <el-table-column align="header-center" label="挖矿券名称">
         <template slot-scope="scope">
-          {{scope.row.product_title}}
+          {{scope.row.product_name}}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="预约时间">
+      <el-table-column align="header-center" label="买入价">
+        <template slot-scope="scope">
+          {{ scope.row.source_price }}
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="收益">
+        <template slot-scope="scope">
+          {{ (scope.row.price)-(scope.row.source_price) }}
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="卖出价">
+        <template slot-scope="scope">
+          {{ scope.row.price }}
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="持有状态">
+        <template slot-scope="scope">
+          {{ scope.row.status|stateTypeFilter }}
+        </template>
+      </el-table-column>
+      <el-table-column align="header-center" label="买入时间">
         <template slot-scope="scope">
           {{ scope.row.create_at }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="类型">
+      <el-table-column align="header-center" label="到期时间">
         <template slot-scope="scope">
-          {{ scope.row.type|appointTypeFilter }}
+          {{ scope.row.end_at }}
         </template>
       </el-table-column>
-      <el-table-column align="header-center" label="券状态">
+      <el-table-column align="header-center" label="剩余天数">
         <template slot-scope="scope">
-          {{ scope.row.state|stateTypeFilter }}
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="操作">
-        <template slot-scope="scope">
-          <el-button type="danger" size="small" @click="handleDelete(scope)">删除</el-button>
+          {{ scope.row.remain_day }}
         </template>
       </el-table-column>
     </el-table>
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.per_page"
-                @pagination="getAppoints"/>
+                @pagination="getHolds"/>
 
   </div>
 </template>
@@ -86,21 +93,14 @@
   import waves from '@/directive/waves' // waves directive
 
   import {
-    getAppoints,
+    getHolds,
     getMinerals
   } from '../../../api/minerals'
 
   const stateTypes = [
-    { key: 1, display_name: '预约中' },
-    { key: 2, display_name: '抢券中' },
-    { key: 3, display_name: '抢购成功' },
-    { key: 4, display_name: '抢购失败' },
-  ]
-  const appointTypes = [
-    { key: 1, display_name: '预约' },
-    { key: 2, display_name: '预约后抢购' },
-    { key: 3, display_name: '抢购' },
-    { key: 4, display_name: '预约未抢购' },
+    { key: 1, display_name: '挖矿中' },
+    { key: 2, display_name: '待转让' },
+    { key: 3, display_name: '转让中' },
   ]
 
   const stateTypeKeyValue = stateTypes.reduce((acc, cur) => {
@@ -108,19 +108,12 @@
     return acc
   }, {})
 
-  const appointTypeKeyValue = appointTypes.reduce((acc, cur) => {
-    acc[cur.key] = cur.display_name
-    return acc
-  }, {})
 
 
   export default {
     components: { Pagination },
     directives: { waves },
     filters:{
-      appointTypeFilter(type){
-        return appointTypeKeyValue[type]
-      } ,
       stateTypeFilter(type){
         return stateTypeKeyValue[type]
       }
@@ -128,10 +121,9 @@
     data() {
       return {
         stateTypes,
-        appointTypes,
         productList: [],
         total: 0,
-        appointList:[],
+        holdList:[],
         listLoading: true,
         listQuery: {
           page: 1,
@@ -140,17 +132,17 @@
       }
     },
     created() {
-      this.getAppoints()
+      this.getHolds()
       this.getMinerals()
     },
     methods: {
       handleFilter() {
         this.listQuery.page = 1
-        this.getAppoints()
+        this.getHolds()
       },
-      async getAppoints() {
-        const res = await getAppoints(this.listQuery)
-        this.appointList = res.data.items
+      async getHolds() {
+        const res = await getHolds(this.listQuery)
+        this.holdList = res.data.items
         this.total = res.data._meta.total_count
         this.listLoading = false
       },

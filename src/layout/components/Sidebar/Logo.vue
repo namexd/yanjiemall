@@ -14,6 +14,7 @@
 </template>
 
 <script>
+  import logo from '@/assets/images/logo.jpg'
 export default {
   name: 'SidebarLogo',
   props: {
@@ -24,8 +25,8 @@ export default {
   },
   data() {
     return {
-      title: 'Vue Element Admin',
-      logo: 'https://wpimg.wallstcn.com/69a1c46c-eb1c-4b46-8bd4-e9e686ef5251.png'
+      title: '炎界商城后台',
+      logo: logo
     }
   }
 }
@@ -55,16 +56,16 @@ export default {
     width: 100%;
 
     & .sidebar-logo {
-      width: 32px;
-      height: 32px;
+      width: 50px;
+      height: 50px;
       vertical-align: middle;
-      margin-right: 12px;
+      margin-right: 5px;
     }
 
     & .sidebar-title {
       display: inline-block;
       margin: 0;
-      color: #fff;
+      color:rgb(255, 208, 75);
       font-weight: 600;
       line-height: 50px;
       font-size: 14px;
