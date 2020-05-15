@@ -23,7 +23,7 @@ import { mapGetters } from 'vuex'
 import Logo from './Logo'
 import SidebarItem from './SidebarItem'
 import variables from '@/styles/variables.scss'
-import { goodsRouter, mineralsRouter, ordersRouter, settingsRouter, usersRouter } from '../../../router'
+import { goodsRouter, mineralsRouter, ordersRouter, settingsRouter, usersRouter, vouchersRouter ,appsRouter} from '../../../router'
 import Layout from '@/layout'
 
 const DefaultRoutes=[
@@ -91,8 +91,14 @@ export default {
         case 'minerals':
           this.routes = mineralsRouter
           break
+        case 'vouchers':
+          this.routes = vouchersRouter
+          break
         case 'settings':
           this.routes = settingsRouter
+          break
+        case 'apps':
+          this.routes = appsRouter
           break
       }
     }

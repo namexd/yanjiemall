@@ -13,7 +13,7 @@
       <el-menu-item index="goods">商品</el-menu-item>
       <el-menu-item index="orders">订单</el-menu-item>
       <el-menu-item index="minerals">挖矿卷</el-menu-item>
-      <el-menu-item index="consume">消费券</el-menu-item>
+      <el-menu-item index="vouchers">消费券</el-menu-item>
       <el-menu-item index="settings">设置</el-menu-item>
       <el-menu-item index="apps">应用</el-menu-item>
     </el-menu>

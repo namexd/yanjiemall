@@ -11,6 +11,8 @@ import goodsRouters from './modules/goods'
 import ordersRouters from './modules/orders'
 import settingsRouters from '@/router/modules/settings'
 import mineralsRouters from '@/router/modules/minerals'
+import appsRouters from '@/router/modules/vouchers'
+import vouchersRouters from '@/router/modules/vouchers'
 /**
  * Note: sub-menu only appear when route children.length >= 1
  * Detail see: https://panjiachen.github.io/vue-element-admin-site/guide/essentials/router-and-nav.html
@@ -43,6 +45,8 @@ export const constantRoutes = [
   ordersRouters,
   settingsRouters,
   mineralsRouters,
+  vouchersRouters,
+  appsRouters,
   {
     path: '/',
     component: Layout,
@@ -98,6 +102,8 @@ export const goodsRouter = [goodsRouters]
 export const ordersRouter = [ordersRouters]
 export const usersRouter = [usersRouters]
 export const mineralsRouter = [mineralsRouters]
+export const vouchersRouter = [vouchersRouters]
+export const appsRouter = [appsRouters]
 
 
 /**
