@@ -44,6 +44,13 @@ const usersRouters = {
       meta: { title: '用户详情',icon: 'lock' }
     },
     {
+      path: 'orders',
+      component: () => import('@/views/users/orders'),
+      name: 'userOrders',
+      hidden:true,
+      meta: { title: '用户订单',icon: 'lock' }
+    },
+    {
       path: 'relations',
       component: () => import('@/views/users/relation'),
       name: 'usersRelations',

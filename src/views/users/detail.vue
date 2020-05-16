@@ -46,10 +46,10 @@
     data() {
       return {
         user: {
-          user_info:[],
-          user_distribution:[],
-          user_attr:[],
-          user_order:[],
+          user_info:{},
+          user_distribution:{},
+          user_attr:{},
+          user_order:{},
         },
       }
     },

@@ -11,7 +11,7 @@ import goodsRouters from './modules/goods'
 import ordersRouters from './modules/orders'
 import settingsRouters from '@/router/modules/settings'
 import mineralsRouters from '@/router/modules/minerals'
-import appsRouters from '@/router/modules/vouchers'
+import appsRouters from '@/router/modules/apps'
 import vouchersRouters from '@/router/modules/vouchers'
 /**
  * Note: sub-menu only appear when route children.length >= 1

@@ -25,7 +25,7 @@ const ordersRouters = {
         {
           path: 'all',
           component: () => import('@/views/orders/list'),
-          name: 'all',
+          name: 'orderAll',
           meta: { title: '全部订单',icon: 'list' }
         },
         {

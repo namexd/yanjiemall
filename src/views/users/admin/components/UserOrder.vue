@@ -3,7 +3,7 @@
     <div slot="header" class="clearfix">
       <span>交易统计</span>
       <b style="margin-left: 100px">最近下单时间：{{user.recent_pay_at}}</b>
-      <el-button @click="handleUserBlock(user.status)" style="float: right;" type="primary" size="mini" >查看订单列表</el-button>
+      <el-button @click="getUserOrders(user.id)" style="float: right;" type="primary" size="mini">查看订单列表</el-button>
 
     </div>
 
@@ -39,12 +39,14 @@
       user: {
         type: Object,
         default: () => {
-          return {
-          }
+          return {}
         }
       }
     },
-    methods:{
+    methods: {
+      getUserOrders(id) {
+        this.$router.push({ name: 'userOrders', query: { user_id: this.$route.query.id } })
+      }
     }
   }
 </script>
@@ -54,6 +56,7 @@
     margin: 0 auto;
     display: table;
   }
+
   .card-panel-text {
     line-height: 18px;
     color: rgba(0, 0, 0, 0.45);
@@ -64,10 +67,12 @@
   .text-muted {
     color: #777;
   }
+
   .progress-item {
     margin-bottom: 10px;
     font-size: 14px;
   }
+
   .user-profile {
     .user-name {
       font-weight: bold;
