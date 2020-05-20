@@ -26,7 +26,7 @@ const usersRouters = {
     },
     {
       path: 'level',
-      component: () => import('@/views/table/inline-edit-table'),
+      component: () => import('@/views/users/level'),
       name: 'usersLevel',
       meta: { title: '会员等级',icon: 'star' }
     },

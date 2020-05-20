@@ -1,17 +1,19 @@
 <template>
   <div class="app-container">
     <div class="filter-container">
-      <el-form :model="listQuery" >
+      <el-form :model="listQuery">
         <el-row>
           <el-col :span="5">
-            <el-form-item label="预约人账号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.mobile" placeholder="出售人账号" style="width: 200px;" class="filter-item"
+            <el-form-item label="出售人账号" class="postInfo-container-item">
+              <el-input clearable v-model="listQuery.mobile" placeholder="出售人账号" style="width: 200px;"
+                        class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
           <el-col :span="4">
             <el-form-item label="挖矿券:" class="postInfo-container-item">
-              <el-select v-model="listQuery.product_id" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+              <el-select v-model="listQuery.product_id" placeholder="请选择" clearable class="filter-item"
+                         style="width: 130px">
                 <el-option v-for="item in productList" :key="item.id" :label="item.product_title"
                            :value="item.id"/>
               </el-select>
@@ -85,7 +87,7 @@
     { key: 3, display_name: '转让中(待付款)' },
     { key: 4, display_name: '转让中(待确认)' },
     { key: 5, display_name: '已完成' },
-    { key: 6, display_name: '待转让(已退回)' },
+    { key: 6, display_name: '待转让(已退回)' }
   ]
 
   const stateTypeKeyValue = stateTypes.reduce((acc, cur) => {
@@ -96,22 +98,21 @@
   export default {
     components: { Pagination },
     directives: { waves },
-    filters:{
-      stateTypeFilter(type){
+    filters: {
+      stateTypeFilter(type) {
         return stateTypeKeyValue[type]
       }
     },
     data() {
       return {
         stateTypes,
-        transferTypes,
         productList: [],
         total: 0,
-        transferList:[],
+        transferList: [],
         listLoading: true,
         listQuery: {
           page: 1,
-          per_page: 20,
+          per_page: 20
         }
       }
     },
@@ -120,9 +121,15 @@
       this.getMinerals()
     },
     methods: {
-      handlePoint(row)
-      {
-        this.$router.push({name:'mineralsPoint',query:{id:row.product_id}})
+      handlePoint(row) {
+        this.$router.push({
+          name: 'mineralsPoint', query: {
+            id: row.product_id,
+            mobile: row.mobile,
+            product_name: row.product_name,
+            price: row.price
+          }
+        })
       },
       handleFilter() {
         this.listQuery.page = 1
@@ -138,7 +145,7 @@
         const res = await getMinerals()
         this.productList = res.data.items
         this.total = res.data._meta.total_count
-      },
+      }
     }
   }
 </script>

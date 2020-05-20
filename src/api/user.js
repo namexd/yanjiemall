@@ -44,13 +44,29 @@ export function getUserRelations(id,query) {
 
 export function userBlack(id) {
   return request({
-    url: `/user/black/${id}`,
+    url: `/user/${id}/black`,
     method: 'put',
   })
 }
-export function logout() {
+
+export function addMine(id,data) {
   return request({
-    url: '/vue-element-admin/user/logout',
-    method: 'post'
+    url:  `/user/${id}/mine`,
+    method: 'post',
+    data
+  })
+}
+export function addGold(id,data) {
+  return request({
+    url:  `/user/${id}/goldcoin`,
+    method: 'put',
+    data
+  })
+}
+export function getUserMines(id,query) {
+  return request({
+    url:  `/user/${id}/mine`,
+    method: 'get',
+    params: query
   })
 }

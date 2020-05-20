@@ -108,6 +108,15 @@
                        :value="item.key"/>
           </el-select>
         </el-form-item>
+        <el-form-item label="加速" required>
+          <el-input v-model="mineral.low_speed" placeholder="请输入消费券数量" style="width: 30%"/> <span style="margin-left: 10px">低档</span>
+        </el-form-item>
+        <el-form-item   required>
+          <el-input v-model="mineral.medium_speed" placeholder="请输入消费券数量" style="width: 30%"/> <span style="margin-left: 10px">中档</span>
+        </el-form-item>
+        <el-form-item   required>
+          <el-input v-model="mineral.high_speed" placeholder="请输入消费券数量" style="width: 30%"/> <span style="margin-left: 10px">高档</span>
+        </el-form-item>
       </el-form>
       <div style="text-align:right;">
         <el-button type="danger" @click="dialogVisible=false">取消</el-button>
@@ -149,6 +158,9 @@
     days: '',
     percent: '',
     product_label: '',
+    low_speed: '',
+    medium_speed: '',
+    high_speed: '',
   }
   export default {
     components: { Pagination, Upload },

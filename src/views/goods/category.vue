@@ -11,7 +11,11 @@
       </el-table-column>
       <el-table-column align="center" label="分类图片" width="220">
         <template slot-scope="scope">
-          {{ scope.row.pic_url }}
+          <el-image
+            style="width: 60px; height: 60px"
+            :src="scope.row.pic_url"
+            :preview-src-list="[scope.row.pic_url]">
+          </el-image>
         </template>
       </el-table-column>
       <el-table-column align="header-center" label="状态">
@@ -50,9 +54,7 @@
         </el-form-item>
 
         <el-form-item label="分类图片" prop="pic_url">
-<!--                      <Upload v-model="category.pic_url" />-->
-          <el-input v-model="category.pic_url" placeholder="分类图片"
-                    value="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"/>
+                      <Upload v-model="category.pic_url" />
 
         </el-form-item>
         <el-form-item v-if="dialogType==='new'" label="状态" prop="status" style="margin-bottom: 30px;">
@@ -252,7 +254,6 @@
           this.categoryList.push(this.category)
         }
 
-        const { id, names, status, pic_url, goods_num } = this.category
         this.dialogVisible = false
         this.$notify({
           title: 'Success',
@@ -265,6 +266,10 @@
 </script>
 
 <style lang="scss" scoped>
+  img{
+    width: 60px;
+    height: 60px;
+  }
   .app-container {
     .roles-table {
       margin-top: 30px;

@@ -1,130 +1,115 @@
 <template>
-  <div class="singleImageUpload2 upload-container">
+  <div>
     <el-upload
-      :data="dataObj"
-      :multiple="false"
+      class="avatar-uploader2"
+      action=""
       :show-file-list="false"
+      :http-request="upload"
       :on-success="handleImageSuccess"
-      class="image-uploader"
-      drag
-      action="https://httpbin.org/post"
+      :on-error="handleImageError"
     >
-      <i class="el-icon-upload" />
-      <div class="el-upload__text">
-        Drag或<em>点击上传</em>
-      </div>
+      <img v-if="imageUrl" :src="imageUrl" class="avatar2">
+      <i v-else class="el-icon-plus avatar-uploader2-icon"></i>
     </el-upload>
-    <div v-show="imageUrl.length>0" class="image-preview">
-      <div v-show="imageUrl.length>1" class="image-preview-wrapper">
-        <img :src="imageUrl">
-        <div class="image-preview-action">
-          <i class="el-icon-delete" @click="rmImage" />
-        </div>
-      </div>
-    </div>
   </div>
 </template>
 
 <script>
-import { getToken } from '@/api/qiniu'
-
-export default {
-  name: 'SingleImageUpload2',
-  props: {
-    value: {
-      type: String,
-      default: ''
-    }
-  },
-  data() {
-    return {
-      tempUrl: '',
-      dataObj: { token: '', key: '' }
-    }
-  },
-  computed: {
-    imageUrl() {
-      return this.value
-    }
-  },
-  methods: {
-    rmImage() {
-      this.emitInput('')
+  import { uuid } from '../../utils'
+  const baidubce = require('@baiducloud/bos-uploader');
+  import { getToken } from '../../api/upload'
+  export default {
+    props: {
+      value: ''
     },
-    emitInput(val) {
-      this.$emit('input', val)
+    computed: {
+      imageUrl() {
+        return this.value
+      }
     },
-    handleImageSuccess() {
-      this.emitInput(this.tempUrl)
+    data() {
+      return {
+        dataObj: {},
+        tempUrl: '',
+      }
     },
-    beforeUpload() {
-      const _self = this
-      return new Promise((resolve, reject) => {
+    methods: {
+      upload(file, detail) {
         getToken().then(response => {
-          const key = response.data.qiniu_key
-          const token = response.data.qiniu_token
-          _self._data.dataObj.token = token
-          _self._data.dataObj.key = key
-          this.tempUrl = response.data.qiniu_url
-          resolve(true)
-        }).catch(() => {
-          reject(false)
+          this.dataObj=response.data;
+          this.uploadImage(response.data,file.file)
         })
-      })
-    }
-  }
-}
-</script>
 
-<style lang="scss" scoped>
-.upload-container {
-  width: 100%;
-  height: 100%;
-  position: relative;
-  .image-uploader {
-    height: 100%;
+      },
+      uploadImage(param,file)
+      {
+        let config = {
+          credentials: {
+            ak: param.accessKeyId,
+            sk: param.secretAccessKey,
+          },
+          sessionToken: param.sessionToken,
+          endpoint: param.endpoint,
+        }
+        let client = new baidubce.sdk.BosClient(config)
+
+        let suffexs = file.name.split('.')
+        let suffex = ''
+        if (suffexs.length > 0) {
+          suffex = suffexs[suffexs.length - 1]
+        }
+
+        let key =uuid() + '.' + suffex
+        let endpoint = param.endpoint
+        let bos_bucket = param.bos_bucket
+
+        let reader = new FileReader()
+        reader.readAsArrayBuffer(file)
+        reader.onload = (e) => {
+          client
+            .putObject(bos_bucket, key, new Buffer(e.target.result))
+            .then((response) => {
+              this.emitInput(endpoint + '/' + key)
+            })
+            .catch((error) => {
+              console.log('失败')
+              console.log(error)
+            })
+        }
+      },
+      emitInput(val) {
+        this.$emit('input', val)
+      },
+      handleImageSuccess(file) {
+      },
+      handleImageError(err, file, fileList) {
+        console.log(err)
+      },
+    }
   }
-  .image-preview {
-    width: 100%;
-    height: 100%;
-    position: absolute;
-    left: 0px;
-    top: 0px;
+</script>
+<style>
+  .avatar-uploader2 .el-upload {
     border: 1px dashed #d9d9d9;
-    .image-preview-wrapper {
-      position: relative;
-      width: 100%;
-      height: 100%;
-      img {
-        width: 100%;
-        height: 100%;
-      }
-    }
-    .image-preview-action {
-      position: absolute;
-      width: 100%;
-      height: 100%;
-      left: 0;
-      top: 0;
-      cursor: default;
-      text-align: center;
-      color: #fff;
-      opacity: 0;
-      font-size: 20px;
-      background-color: rgba(0, 0, 0, .5);
-      transition: opacity .3s;
-      cursor: pointer;
-      text-align: center;
-      line-height: 200px;
-      .el-icon-delete {
-        font-size: 36px;
-      }
-    }
-    &:hover {
-      .image-preview-action {
-        opacity: 1;
-      }
-    }
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
   }
-}
+  .avatar-uploader2 .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader2-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 60px;
+    height: 60px;
+    line-height: 60px;
+    text-align: center;
+  }
+  .avatar2 {
+    width: 60px;
+    height: 60px;
+    display: block;
+  }
 </style>

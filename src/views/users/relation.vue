@@ -8,8 +8,11 @@
       <el-row :gutter="5">
         <el-col :span="6" :xs="24">
           <div>
-            <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
-                 alt="">
+            <el-image
+              style="width: 60px; height: 60px"
+              :src="user.avatar"
+              :preview-src-list="[user.avatar]">
+            </el-image>
           </div>
         </el-col>
         <el-col :span="12" :xs="24">
@@ -141,6 +144,7 @@
         first_relation_promote: 0,
         second_relation_promote: 0,
         activityName: '1',
+        user: {},
         total: 0,
         promoter:'普通用户',
         promoterOptions,

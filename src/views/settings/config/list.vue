@@ -6,7 +6,6 @@
           <el-card>
             <div slot="header" class="clearfix">
               <span>金币设置</span>
-              <el-button style="float: right; padding: 3px 0" type="text">操作按钮</el-button>
             </div>
             <div v-for="o in 4" :key="o" class="text item">
               {{'列表内容 ' + o }}
@@ -49,12 +48,14 @@
 </template>
 
 <script>
+  import { getConfigs } from '../../../api/settings'
+
   export default {
     directives: { waves },
 
     data() {
       return {
-        configs:[]
+        configList:[]
       }
     },
     created() {
@@ -62,12 +63,9 @@
     },
     methods: {
       async getConfig() {
-        this.listLoading = true
-
         const res = await getConfigs(this.listQuery)
-        this.bannerList = res.data.items
+        this.configList = res.data.items
         this.total = res.data._meta.total_count
-        this.listLoading = false
       },
     }
   }

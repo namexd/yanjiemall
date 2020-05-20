@@ -46,19 +46,19 @@
           <span>{{ row.mobile}}</span><el-tag  v-if="row.status==1" type="warning">黑名单</el-tag>
         </template>
       </el-table-column>
-      <el-table-column label="等级"   >
+      <el-table-column label="等级"    align="center">
         <template slot-scope="{row}">
           <el-tag>{{ row.is_promoter | PromoterFilter }}</el-tag>
         </template>
       </el-table-column>
       <el-table-column label="成交订单"   align="center">
         <template slot-scope="{row}">
-          <span>{{ row.order_count }}</span>
+          <span>订单：{{ row.order_count }}</span><br><span>金额：{{ row.order_money }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="金币总数/可用金币" >
+      <el-table-column label="金币总数/可用金币" align="center" >
         <template slot-scope="{row}">
-         {{row.gold_coin}}/{{row.left_gold_coin}}
+         {{row.gold_coin}}<br>{{row.left_gold_coin}}
         </template>
       </el-table-column>
       <el-table-column label="消费券数量" align="center" >
@@ -71,11 +71,11 @@
           <el-button type="primary" size="small" @click="handleView(row)">
             查看
           </el-button>
-          <el-button v-if="row.status!=1" size="small" type="success"
-                     @click="handleModifyStatus(row)">
+          <el-button v-if="row.status==2" size="small" type="danger"
+                     @click="handleModifyStatus(row,1)">
             黑名单
           </el-button>
-          <el-button v-if="row.status!=2" size="small" @click="handleModifyStatus(row)">
+          <el-button v-if="row.status==1" size="small" @click="handleModifyStatus(row,2)">
             移除黑名单
           </el-button>
         </template>
@@ -138,32 +138,6 @@
           status: undefined,
         },
         userStatusOptions,
-        sortOptions: [{ label: 'ID Ascending', key: '+id' }, { label: 'ID Descending', key: '-id' }],
-        statusOptions: ['published', 'draft', 'deleted'],
-        showReviewer: false,
-        temp: {
-          id: undefined,
-          importance: 1,
-          remark: '',
-          timestamp: new Date(),
-          title: '',
-          type: '',
-          status: 'published'
-        },
-        dialogFormVisible: false,
-        dialogStatus: '',
-        textMap: {
-          update: 'Edit',
-          create: 'Create'
-        },
-        dialogPvVisible: false,
-        pvData: [],
-        rules: {
-          type: [{ required: true, message: 'type is required', trigger: 'change' }],
-          timestamp: [{ type: 'date', required: true, message: 'timestamp is required', trigger: 'change' }],
-          title: [{ required: true, message: 'title is required', trigger: 'blur' }]
-        },
-        downloadLoading: false
       }
     },
     created() {
@@ -173,7 +147,6 @@
       getList() {
         this.listLoading = true
         getUsers(this.listQuery).then(response => {
-          console.log(response)
           this.list = response.data.items
           this.total = response.data._meta.total_count
           this.listLoading = false
@@ -184,13 +157,25 @@
         this.getList()
       },
       handleModifyStatus(row, status) {
-        userBlack(row.id).then(res=>{
-          this.$message({
-            message: '操作成功',
-            type: 'success'
+        this.$confirm('您确认要把'+row.mobile+'加入黑名单吗？拉黑后，该账号将无法访问商城?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+          userBlack(row.id).then(res=>{
+            this.$message({
+              message: '操作成功',
+              type: 'success'
+            })
+            row.status = status
           })
-          row.status = status
-        })
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+
       },
       sortChange(data) {
         const { prop, order } = data

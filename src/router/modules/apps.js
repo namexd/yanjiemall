@@ -50,7 +50,7 @@ const appsRouters = {
       children:[
         {
           path: 'distribution_list',
-          component: () => import('@/views/table/inline-edit-table'),
+          component: () => import('@/views/apps/promoter/list'),
           name: 'distributionList',
           meta: { title: '分销商列表',icon: '列表' }
         },
@@ -62,9 +62,9 @@ const appsRouters = {
         },
         {
           path: 'distribution_level',
-          component: () => import('@/views/table/inline-edit-table'),
+          component: () => import('@/views/apps/promoter/level'),
           name: 'distributionLevel',
-          meta: { title: '分红设置',icon: '设置' }
+          meta: { title: '分销商等级',icon: '设置' }
         },
         {
           path: 'balance',
@@ -81,7 +81,7 @@ const appsRouters = {
         },
         {
           path: 'distribution_config',
-          component: () => import('@/views/table/inline-edit-table'),
+          component: () => import('@/views/apps/distribution/config'),
           name: 'distributionConfig',
           meta: { title: '分销设置',icon: '设置' }
         },

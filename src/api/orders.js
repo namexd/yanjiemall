@@ -13,10 +13,11 @@ export function getOrder(id) {
     method: 'get',
   })
 }
-export function closeOrder(id) {
+export function closeOrder(id,data) {
   return request({
-    url: `/orders/close/${id}`,
-    method: 'post',
+    url: `/order/close/${id}`,
+    method: 'put',
+    data
   })
 }
 

@@ -82,9 +82,13 @@
                 @pagination="getAppeals"/>
 
 
-    <el-dialog title="确认密码" :visible.sync="dialogFormVisible">
+    <el-dialog title="手动确认挖矿券归属" :visible.sync="dialogFormVisible">
       <el-form :model="distributeParams">
-        <el-form-item label="请输入密码" label-width="150px">
+        <el-form-item   label-width="60px" >
+         请确认已核实完相关凭证，您确定将此券分配给： <span style="color: red">{{title}}</span>
+        </el-form-item>
+
+        <el-form-item label="后台登陆密码" label-width="150px">
           <el-input v-model="distributeParams.pwd" type="password" style="width: 90%"></el-input>
         </el-form-item>
       </el-form>
@@ -132,6 +136,7 @@
       return {
         appealsList: [],
         dialogFormVisible: false,
+        title: '',
         total: 0,
         listLoading: true,
         distributeParams: {
@@ -151,6 +156,7 @@
         this.distributeParams.type = type
         this.distributeParams.id = row.id
         this.dialogFormVisible = true
+        type == 1 ? this.title = '买家' : this.title = '出售人'
       },
       postDistribute() {
         const params = deepClone(this.distributeParams)

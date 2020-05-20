@@ -74,7 +74,19 @@
       </el-table-column>
       <el-table-column align="center" label="商品" width="220">
         <template slot-scope="scope">
-          {{ scope.row.goods_cover_pic }} {{ scope.row.goods_name }}
+          <el-row>
+            <el-col :span="12">
+              <el-image
+                style="width: 60px; height: 60px"
+                :src="scope.row.goods_cover_pic"
+                :preview-src-list="[scope.row.goods_cover_pic]">
+              </el-image>
+            </el-col>
+            <el-col :span="12">
+              <div style="margin-top: 20%">{{ scope.row.goods_name }}</div>
+            </el-col>
+          </el-row>
+
         </template>
       </el-table-column>
       <el-table-column align="header-center" label="价格">
@@ -102,6 +114,12 @@
           {{ scope.row.total_sales }}
         </template>
       </el-table-column>
+      <el-table-column align="header-center" label="推荐">
+        <template slot-scope="scope">
+          <el-tag v-if=" scope.row.is_pick==0" type="warning"> 否</el-tag>
+          <el-tag v-if=" scope.row.is_pick==1" type="success"> 是</el-tag>
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <el-button type="primary" size="mini" @click="handleEdit(scope)">
@@ -121,7 +139,7 @@
                 @pagination="getGoods"/>
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑商品':'新增商品'">
-      <el-form :model="goods" :rules="rules" label-width="80px" label-position="left" ref="goodsForm">
+      <el-form :model="goods" :rules="rules" label-width="100px" label-position="left" ref="goodsForm">
       <el-tabs v-model="activeName">
         <el-tab-pane label="基础信息" name="first">
 
@@ -136,15 +154,22 @@
             <el-form-item label="副标题">
               <el-input type="textarea" clearable v-model="goods.subtitle" placeholder="副标题" style="width: 280px"/>
             </el-form-item>
-<!--            <el-form-item label="分类图片"  prop="pic_url">-->
-<!--              &lt;!&ndash;                      <Upload v-model="goods.pic_url" />&ndash;&gt;-->
-
-<!--            </el-form-item>-->
+            <el-form-item label="商品轮播图"  prop="pic_url">
+            <Upload v-model="goods.pic_url" />
+              <p>建议尺寸750*750像素，最多上传10张</p>
+            </el-form-item>
             <el-form-item label="商品分类:" class="postInfo-container-item">
-              <el-select v-model="goods.cid" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+              <el-select v-model="goods.cid" placeholder="请选择" multiple  clearable class="filter-item" style="width: 130px">
                 <el-option v-for="item in  categoryList" :key="item.id" :label="item.name"
                            :value="item.id"/>
               </el-select>
+            </el-form-item>
+          <el-form-item label="是否推荐:" v-if="goods.type==1">
+            <el-switch
+              v-model="goods.is_pick"
+              active-text="推荐"
+              inactive-text="不推荐">
+            </el-switch>
             </el-form-item>
             <el-form-item label="规格类型">
               <el-radio v-model="goods.sku_tag" :label="goods.sku_tag">多规格商品</el-radio>
@@ -173,8 +198,7 @@
                     label="图片"
                   >
                     <template slot-scope="scope">
-
-                      <el-input v-model="scope.row.sku_cover_pic" placeholder="图片"/>
+                        <Upload2 v-model="scope.row.sku_cover_pic" />
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -224,11 +248,15 @@
               </el-form>
 
             </el-form-item>
-            <el-form-item label="赠送金币" prop="gold_coins">
+            <el-form-item label="赠送金币" prop="gold_coins" v-if="goods.type!==2">
               <el-input clearable v-model="goods.gold_coins" placeholder="请输入数量" style="width: 280px"/>
             </el-form-item>
             <el-form-item label="运费" prop="freight">
               <el-input clearable v-model="goods.freight" placeholder="请输入运费" style="width: 280px"/>
+            </el-form-item>
+          <el-form-item label="状态" prop="status">
+            <el-radio v-model="goods.status" :label="2">上架售卖</el-radio>
+            <el-radio v-model="goods.status" :label="1">放置仓库</el-radio>
             </el-form-item>
 
         </el-tab-pane>
@@ -248,7 +276,8 @@
 </template>
 
 <script>
-  import Upload from '@/components/Upload/SingleImage'
+  import Upload from '@/components/Upload/SingleImage3'
+  import Upload2 from '@/components/Upload/SingleImage2'
   import Tinymce from '@/components/Tinymce'
 
   import { deepClone } from '@/utils'
@@ -266,14 +295,15 @@
     goods_name: '',
     subtitle: '',
     type: 1,
-    pic_url: ['啊实打实大师'],
+    pic_url: [],
     cid: '',
     sku_tag: '',
     skus:[],
     gold_coins: '',
     freight: 0,
     status: 1,
-    content: ''
+    content: '',
+    is_pick: 0
   }
   const skus = {sku_name: '',sku_cover_pic: '',left_stock: '',price: '',weight: ''}
   const goodsFilter = {
@@ -295,7 +325,7 @@
   ]
 
   export default {
-    components: { Pagination, Upload, Tinymce },
+    components: { Pagination, Upload, Tinymce ,Upload2},
     directives: { waves },
     data() {
       var validateCoin = (rule, value, callback) => {
@@ -336,10 +366,7 @@
         listLoading: true,
         listQuery: {
           page: 1,
-          goods_name: '',
           per_page: 20,
-          cid: '',
-          type: ''
         }
       }
     },
@@ -398,13 +425,13 @@
         this.getGoods()
       },
       handleAddGoods() {
-        this.goods = Object.assign({}, defaultGoods)
+        this.goods = defaultGoods
         this.dialogType = 'new'
         this.dialogVisible = true
       },
       handleEdit(scope) {
         getGood(scope.row.id).then(res=>{
-          this.goods = Object.assign({}, res.data)
+          this.goods =res.data
           this.old_skus =deepClone(res.data.skus)
           this.dialogType = 'edit'
           this.dialogVisible = true
@@ -452,28 +479,28 @@
               updateGoods(id,data).then(res => {
                 this.getGoods()
               }).catch(err=>{
-
+                this.$message.error(err.message)
               })
             } else {
               delete data.new_skus
               addGoods(data).then(res => {
                 this.getGoods()
               }).catch(err=>{
-
+                this.$message.error(err.message)
               })
             }
+            this.dialogVisible = false
+            this.$notify({
+              title: 'Success',
+              message: '操作成功！',
+              type: 'success'
+            })
           } else {
-            console.log('error submit!!')
+            this.$message.error('请按照要求添加')
             return false
           }
         })
 
-        this.dialogVisible = false
-        this.$notify({
-          title: 'Success',
-          message: '操作成功！',
-          type: 'success'
-        })
       }
     }
   }

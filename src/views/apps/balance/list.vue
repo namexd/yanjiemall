@@ -72,7 +72,8 @@
             同意
           </el-button>
           <el-button v-if="scope.row.status==0" type="danger" size="mini" @click="handleRefuse(scope.row)">拒绝</el-button>
-          <el-button v-if="scope.row.status!==0" type="primary" size="mini" @click="handleShow(scope.row)">查看</el-button>
+          <el-button v-if="scope.row.status==1" type="primary" size="mini" @click="handleShow(scope.row)">查看</el-button>
+          <el-button v-if="scope.row.status==2" type="info" size="mini">已拒绝</el-button>
 
         </template>
       </el-table-column>
@@ -173,11 +174,13 @@
         delete params.id
         balancesAgree(id,params).then(res=>{
           res.code==0?this.$message.success('操作成功！'):this.$message.success('操作失败！')
+          this.getBalance()
         })
       },
       handleRefuse(row) {
         balancesRefuse(row.id).then(res=>{
           res.code==0?this.$message.success('操作成功！'):this.$message.success('操作失败！')
+          this.getBalance()
         })
       },
       handleShow(row) {

@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="4">
             <el-form-item label="订单名称" class="postInfo-container-item">
-              <el-input v-model="listQuery.order_no" placeholder="请输入订单编号" style="width: 200px;" class="filter-item"
+              <el-input v-model="listQuery.order_no" placeholder="请输入订单编号" clearable style="width: 200px;" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
@@ -16,7 +16,7 @@
             </el-select>
           </el-col>
           <el-col :span="4">
-            <el-input v-model="addressValue" style="width: 200px;" class="filter-item"/>
+            <el-input v-model="addressValue" clearable style="width: 200px;" class="filter-item"/>
           </el-col>
           <el-col :span="4" style="text-align: right">
             <el-select v-model="timeType" placeholder="请选择" clearable class="filter-item" style="width: 130px">
@@ -84,11 +84,19 @@
         <template slot-scope="scope">
           <div>
             <el-row v-for="good in scope.row.goods" style="border-bottom: 1px solid #dfe6ec">
-              <el-col :span="8"><div class="grid-content bg-purple">  <img :src="good.goods_cover_pic" alt=""></div></el-col>
-              <el-col :span="8"><div class="grid-content bg-purple">  {{good.goods_name}}<br>
-                {{good.sku_name}}</div></el-col>
-              <el-col :span="8"><div class="grid-content bg-purple"> x{{good.price}}<br>
-                x{{good.sku_name}}</div></el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple"><img :src="good.goods_cover_pic" alt=""></div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple"> {{good.goods_name}}<br>
+                  {{good.sku_name}}
+                </div>
+              </el-col>
+              <el-col :span="8">
+                <div class="grid-content bg-purple"> x{{good.price}}<br>
+                  x{{good.sku_name}}
+                </div>
+              </el-col>
             </el-row>
           </div>
         </template>
@@ -129,7 +137,7 @@
           </el-button>
           <div v-if="scope.row.status==1">
             <span>等待付款</span><br>
-            <el-button type="danger" size="mini" @click="closeOrder(scope.row.id)">
+            <el-button type="danger" size="mini" @click="closeOrder(scope.row)">
               关闭
             </el-button>
             <el-button type="warning" size="mini" @click="showOrders(scope.row.id)">
@@ -138,10 +146,10 @@
           </div>
           <div v-if="scope.row.status==2">
             <span>等待发货</span><br>
-            <el-button type="danger" size="mini" @click="handelExpressOrder(scope.row.id)">
+            <el-button type="danger" size="mini" @click="handelExpressOrder(scope.row)">
               立即发货
             </el-button>
-            <el-button type="warning" size="mini" @click="showOrders(scope.row.id)">
+            <el-button type="warning" size="mini" @click="closeOrder(scope.row)">
               退款
             </el-button>
           </div>
@@ -172,16 +180,34 @@
 
     <el-dialog title="发货信息" :visible.sync="dialogFormVisible">
       <el-form :model="expressForm">
+        <el-form-item label="收货地址" label-width="120px">
+          {{total_address}}
+        </el-form-item>
         <el-form-item label="快递公司" label-width="120px">
-          <el-input v-model="expressForm.express_company	" autocomplete="off"></el-input>
+          <el-input v-model="expressForm.express_company" clearable autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="快递单号" label-width="120px">
-          <el-input v-model="expressForm.express_no" autocomplete="off"></el-input>
+          <el-input v-model="expressForm.express_no" clearable autocomplete="off"></el-input>
         </el-form-item>
       </el-form>
       <div slot="footer" class="dialog-footer">
         <el-button @click="dialogFormVisible = false">取 消</el-button>
         <el-button type="primary" @click="postExpress">确 定</el-button>
+      </div>
+    </el-dialog>
+    <el-dialog title="退款" :visible.sync="dialogCloseVisible">
+      <el-form :model="closeParam">
+        <el-form-item label="" label-width="50px">
+          是否退款并关闭订单
+        </el-form-item>
+        <el-form-item label="关闭原因" label-width="120px">
+          <el-input maxlength="200"
+                    show-word-limit type="textarea" clearable v-model="closeParam.reason" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogCloseVisible = false">取 消</el-button>
+        <el-button type="primary" @click="postClose">确 定</el-button>
       </div>
     </el-dialog>
   </div>
@@ -261,8 +287,11 @@
         addressValue: '',
         timeType: 'create_begin_at',
         timeValue: '',
+        total_address: '',
+        closeParam: {},
         orderList: [],
         dialogFormVisible: false,
+        dialogCloseVisible: false,
         listQuery: {
           page: 1,
           per_page: 20
@@ -310,13 +339,9 @@
       handleEdit(scope) {
         this.$router.push({ name: 'orderDetail', query: { id: scope.row.id } })
       },
-      closeOrder(id) {
-        closeOrder(id).then(res => {
-          if (res.code == 0) {
-            this.$message.success('订单关闭成功')
-            this.getOrders()
-          }
-        })
+      closeOrder(row) {
+        this.dialogCloseVisible = true
+        this.closeParam.id = row.id
       },
       handleDelete({ $index, row }) {
         this.$confirm('确定要删除此订单吗?', 'Warning', {
@@ -336,23 +361,33 @@
             console.error(err)
           })
       },
-      handelExpressOrder(id) {
+      handelExpressOrder(row) {
         this.dialogFormVisible = true
-        this.expressForm.id = id
+        this.expressForm.id = row.id
+        this.total_address = row.total_address
       },
       postExpress() {
+        const param = deepClone(this.expressForm)
         let id = this.expressForm.id
-        delete this.expressForm.id
-        expressOrder(id, this.expressForm).then(res => {
-          if (res.code == 0) {
-            this.dialogFormVisible = false
-            this.$notify({
-              title: 'Success',
-              message: '操作成功！',
-              type: 'success'
-            })
-            this.getOrders()
-          }
+        delete param.id
+        expressOrder(id, param).then(res => {
+          this.dialogFormVisible = false
+          this.$notify({
+            title: 'Success',
+            message: '操作成功！',
+            type: 'success'
+          })
+          this.getOrders()
+        })
+      },
+      postClose() {
+        const param = deepClone(this.closeParam)
+        let id = this.closeParam.id
+        delete param.id
+        closeOrder(id, param).then(res => {
+          this.dialogCloseVisible = false
+          this.$message.success('订单关闭成功')
+          this.getOrders()
         })
       }
     }

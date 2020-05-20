@@ -8,9 +8,11 @@
             <el-row>
               <el-col :span="4" v-for="i in place_one_list">
                 <div class="leftNav">
-                  <!--                <img :src="i.image" alt="">-->
-                  <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
-                       alt="">
+                  <el-image :src="i.image">
+                    <div slot="error" class="image-slot">
+                      <i class="el-icon-picture-outline"></i>
+                    </div>
+                  </el-image>
                 </div>
                 <div class="leftNavText">{{i.name}}</div>
               </el-col>
@@ -21,9 +23,11 @@
             <el-row :gutter="20">
               <el-col :span="6" v-for="i in place_two_list">
                 <div class="leftNav">
-                  <!--                <img :src="i.image" alt="">-->
-                  <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
-                       alt="">
+                  <el-image :src="i.image">
+                    <div slot="error" class="image-slot">
+                      <i class="el-icon-picture-outline"></i>
+                    </div>
+                  </el-image>
                 </div>
                 <div class="leftNavText">{{i.name}}</div>
               </el-col>
@@ -36,17 +40,9 @@
       <el-col :span="6" :xs="24" :offset="3">
         <div v-for="(item,key) in items">
           <el-card class="box-card">
-            <div slot="header" class="clearfix">
-              <!--            <img :src="item.image" alt="">-->
-              <img src="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"
-                   alt="">
-              <el-input
-                type="text"
-                placeholder="请输入内容"
-                v-model="item.image"
-                @focus="handleClick(item)"
-              ></el-input>
-              <div style="float: right" v-show="item.isEdit">
+            <div slot="header" class="clearfix"  @click="handleClick(item)">
+              <Upload v-model="item.image"  style="width: 50%;float: left"></Upload>
+              <div style="float: right" v-if="item.isEdit==true">
                 <i class="el-icon-check" @click="handleEdit(item)"></i>
                 <i class="el-icon-close" style="margin-left: 10px" @click="handleDelete(key,item)"></i>
               </div>
@@ -109,7 +105,7 @@
 </template>
 
 <script>
-  import Upload from '@/components/Upload/SingleImage'
+  import Upload from '@/components/Upload/SingleImage2'
   import waves from '@/directive/waves' // waves directive
 
   import { deepClone } from '@/utils'
@@ -154,7 +150,7 @@
       this.getCategories()
     },
     methods: {
-      handleClick(e) {
+     async handleClick(e) {
         e.isEdit = true
       },
       async getNav() {
@@ -239,7 +235,7 @@
   }
 </script>
 
-<style lang="scss" scoped>
+<style  >
   .leftNav img {
     border-radius: 80px;
     width: 50px;

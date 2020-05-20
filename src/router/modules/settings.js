@@ -30,7 +30,7 @@ const settingsRouters = {
     },
     {
       path: 'config',
-      component: () => import('@/views/goods/category'),
+      component: () => import('@/views/settings/config/list'),
       name: 'config',
       meta: { title: '基础设置', icon: '设置' }
     },

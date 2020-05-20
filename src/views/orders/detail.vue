@@ -8,12 +8,12 @@
       <el-row :gutter="20">
         <el-col :span="24" :xs="24">
           <el-card style="margin-bottom: 20px">
-          <el-steps :active="order.status">
-            <el-step title="买家下单" :description="order.create_at"></el-step>
-            <el-step title="买家付款" :description="order.pay_at?order.pay_at_format:''"></el-step>
-            <el-step title="卖家发货" :description="order.express_at?order.express_at_format:''"></el-step>
-            <el-step title="交易完成" :description="order.end_at?order.end_at_format:''"></el-step>
-          </el-steps>
+            <el-steps :active="order.status">
+              <el-step title="买家下单" :description="order.create_at"></el-step>
+              <el-step title="买家付款" :description="order.pay_at?order.pay_at_format:''"></el-step>
+              <el-step title="卖家发货" :description="order.express_at?order.express_at_format:''"></el-step>
+              <el-step title="交易完成" :description="order.end_at?order.end_at_format:''"></el-step>
+            </el-steps>
           </el-card>
         </el-col>
 
@@ -54,24 +54,23 @@
 
   export default {
     name: 'Detail',
-    components:{OrderInfo,UserInfo,OtherInfo,GoodsInfo},
+    components: { OrderInfo, UserInfo, OtherInfo, GoodsInfo },
     data() {
       return {
-        order: []
+        order: {}
       }
     },
     created() {
       this.getOrder()
     },
     methods: {
-      goBack()
-      {
+      goBack() {
         this.$router.back()
       },
-           getOrder() {
-        let id=this.$route.query.id
-        getOrder(id).then(res=>{
-          this.order=res.data
+      getOrder() {
+        let id = this.$route.query.id
+        getOrder(id).then(res => {
+          this.order = res.data
         })
       }
     }

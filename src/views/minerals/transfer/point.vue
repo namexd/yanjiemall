@@ -92,12 +92,31 @@
         this.getPoints()
       },
       handleAppoint(row) {
-        const params = { mobile: row.mobile, mine_id: this.$route.query.id }
-        postPoints(params).then(res => {
-          res.code == 0 ? this.$message.success('指定成功'):this.$message.error('指定失败')
-          delete this.listQuery.mobile
-          this.getPoints()
+        const {
+          id, mobile,
+          product_name,
+          price
+        } = this.$route.query
+        const params = { mobile: row.mobile, mine_id: id }
+        this.$confirm('确定要把' + mobile + '的' + product_name + '(价值' + price + ')指定给：' + row.mobile + '?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }
+        ).then(() => {
+          postPoints(params).then(res => {
+            res.code == 0 ? this.$message.success('指定成功') : this.$message.error('指定失败')
+            delete this.listQuery.mobile
+            this.getPoints()
+          })
+
+        }).catch(() => {
+          this.$message({
+            type: 'info',
+            message: '已取消'
+          })
         })
+
       }
     }
   }

@@ -9,11 +9,11 @@
       <el-row :gutter="20">
 
         <el-col :span="12" :xs="24">
-          <user-info :user="user.user_info" />
+          <user-info :user="user.user_info" style="min-height: 400px"/>
         </el-col>
 
         <el-col :span="12" :xs="24">
-          <user-distribution :user="user.user_distribution" />
+          <user-distribution :user="user.user_distribution" style="min-height: 400px"/>
 
         </el-col>
 
@@ -21,11 +21,11 @@
       <el-row :gutter="20">
 
         <el-col :span="12" :xs="24">
-          <user-attr :user="user.user_attr" />
+          <user-attr :user="user.user_attr" style="min-height: 160px"/>
         </el-col>
 
         <el-col :span="12" :xs="24">
-          <user-order :user="user.user_order" />
+          <user-order :user="user.user_order" style="min-height: 160px"/>
         </el-col>
 
       </el-row>

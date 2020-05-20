@@ -14,7 +14,6 @@ const name = defaultSettings.title || 'vue Element Admin' // page title
 // You can change the port by the following method:
 // port = 9527 npm run dev OR npm run dev --port = 9527
 const port = process.env.port || process.env.npm_config_port || 9527 // dev port
-let target = 'http://climate.sublab.cn/api';
 // All configuration item explanations can be find in https://cli.vuejs.org/config/
 module.exports = {
   /**
@@ -24,7 +23,7 @@ module.exports = {
    * In most cases please use '/' !!!
    * Detail: https://cli.vuejs.org/config/#publicpath
    */
-  publicPath: '/',
+  publicPath: './',
   outputDir: 'dist',
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
@@ -47,7 +46,6 @@ module.exports = {
     proxy: {
       //配置跨域
       '/': {
-        //target: 'http://192.168.1.123:80/api',   //协议头、域名、端口号有一个不同就是跨域
         target: 'http://testadmin.yanjiemall.com',   //协议头、域名、端口号有一个不同就是跨域
         ws: true,      //是否跨域
         changOrigin: true,

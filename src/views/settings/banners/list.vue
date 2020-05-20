@@ -57,9 +57,8 @@
         </el-form-item>
 
         <el-form-item label="上传图片" prop="pic_url">
-          <!--                      <Upload v-model="banner.pic_url" />-->
-          <el-input v-model="banner.image" placeholder="轮播图图片"
-                    value="https://wpimg.wallstcn.com/f778738c-e4f8-4870-b634-56703b4acafe.gif?imageView2/1/w/80/h/80"/>
+                                <Upload v-model="banner.image" />
+          <p>建议图片宽度750，高度200-950</p>
 
         </el-form-item>
       </el-form>
@@ -75,7 +74,6 @@
   import Upload from '@/components/Upload/SingleImage'
   import waves from '@/directive/waves' // waves directive
 
-  import { deepClone } from '@/utils'
   import Pagination from '@/components/Pagination'
 
   import {

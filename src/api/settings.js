@@ -107,9 +107,9 @@ export function getConfigs() {
     method: 'get',
   })
 }
-export function updateConfig(id,data) {
+export function updateConfig(data) {
   return request({
-    url: `/notice/${id}`,
+    url: '/config/level',
     method: 'put',
     data
   })
