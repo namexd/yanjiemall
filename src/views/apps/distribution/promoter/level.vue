@@ -85,8 +85,8 @@
 
 <script>
   import Pagination from '@/components/Pagination'
-  import { getPromoterLevel, getPromoterLevels, showPromoter, updatePromoter } from '../../../api/apps'
-  import { deepClone } from '../../../utils' // secondary package based on el-pagination
+  import { getPromoterLevel, getPromoterLevels, showPromoter, updatePromoter } from '@/api/apps'
+  import { deepClone } from '@/utils' // secondary package based on el-pagination
 
   const two_interestOptions = [
     { key: 0, display_name: '一级' },

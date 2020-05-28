@@ -2,7 +2,7 @@ import request from '@/utils/request'
 
 export function getBalances(query) {
   return request({
-    url: '/user/balance',
+    url: '/user-balance',
     method: 'get',
     params: query
   })
@@ -10,21 +10,21 @@ export function getBalances(query) {
 
 export function balancesAgree(id) {
   return request({
-    url: `/user/balance/${id}/agree`,
+    url: `/user-balance/${id}/agree`,
     method: 'put'
   })
 }
 
 export function balancesRefuse(id) {
   return request({
-    url: `/user/balance/${id}/refuse`,
+    url: `/user-balance/${id}/refuse`,
     method: 'put'
   })
 }
 
 export function getBalance(id) {
   return request({
-    url: `/user/balance/${id}`,
+    url: `/user-balance/${id}`,
     method: 'get'
   })
 }
@@ -52,10 +52,17 @@ export function getPromoters(query) {
   })
 }
 
-export function getPromoter(id) {
+export function getPromoterOrders() {
   return request({
-    url: `/promoter/index/${id}`,
+    url: '/promoter/order',
     method: 'get'
+  })
+}
+export function getPromoterOrder(id,query) {
+  return request({
+    url: `/promoter/${id}/order`,
+    method: 'get',
+    params:query
   })
 }
 export function getPromoterConfig(id) {
@@ -77,6 +84,17 @@ export function updatePromoter(id, data) {
     url: `/promoter/level/${id}`,
     method: 'put',
     data
+  })
+}
+export function getTeamsStat() {
+  return request({
+    url: '/stat/team',
+    method: 'get',
+  })
+}export function getDistributionStat() {
+  return request({
+    url: '/stat/distribution',
+    method: 'get',
   })
 }
 

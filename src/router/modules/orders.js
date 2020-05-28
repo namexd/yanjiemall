@@ -4,7 +4,7 @@ import Layout from '@/layout'
 const ordersRouters = {
   path: '/orders',
   component: Layout,
-  redirect: '/orders/list/selling',
+  redirect: '/orders/index',
   meta: {
     title: '订单',
     icon: 'order'
@@ -12,7 +12,7 @@ const ordersRouters = {
   children: [
     {
       path: 'index',
-      component: () => import('@/views/table/dynamic-table/index'),
+      component: () => import('@/views/orders/index'),
       name: 'orders',
       meta: { title: '订单概览',icon: 'order_unread' }
     },

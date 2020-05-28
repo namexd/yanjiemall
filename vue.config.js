@@ -28,15 +28,6 @@ module.exports = {
   assetsDir: 'static',
   lintOnSave: process.env.NODE_ENV === 'development',
   productionSourceMap: false,
-  // devServer: {
-  //   port: port,
-  //   open: true,
-  //   overlay: {
-  //     warnings: false,
-  //     errors: true
-  //   },
-  //   before: require('./mock/mock-server.js')
-  // },
   devServer: {
     open: false,      //打开页面
     host: 'localhost',   //域名   127.0.0.0本机    0.0.0.0真机测试
@@ -45,12 +36,12 @@ module.exports = {
     hotOnly: false,  //热更新
     proxy: {
       //配置跨域
-      '/': {
-        target: 'http://testadmin.yanjiemall.com',   //协议头、域名、端口号有一个不同就是跨域
+      '/api': {
+        target: 'http://adminapi.yanjiemall.com/',   //协议头、域名、端口号有一个不同就是跨域
         ws: true,      //是否跨域
         changOrigin: true,
         pathRewrite: {
-          '^/': ''
+          '^/api': ''
         }
       },
     }

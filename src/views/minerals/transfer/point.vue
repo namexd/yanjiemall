@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <back-to-prev detail="指定账号"></back-to-prev>
+    <back-to-prev path-name="mineralsPoint" detail="指定账号"></back-to-prev>
     <div class="filter-container">
       <el-form :model="listQuery">
         <el-row>

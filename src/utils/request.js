@@ -5,9 +5,8 @@ import { getToken } from '@/utils/auth'
 
 // create an axios instance
 const service = axios.create({
-  baseURL: '', // url = base url + request url
-  // withCredentials: true, // send cookies when cross-domain requests
-  timeout: 5000 // request timeout
+  baseURL: '/api', // url = base url + request url
+  timeout: 60000 // request timeout
 })
 
 // request interceptor
@@ -48,7 +47,7 @@ service.interceptors.response.use(
     const res = response.data
 
     // if the custom code is not 20000, it is judged as an error.
-    if (res.code !== 0 && res.code !==4004) {
+    if (res.code !== 0) {
       Message({
         message: res.msg || '系统错误！',
         type: 'error',
@@ -56,7 +55,7 @@ service.interceptors.response.use(
       })
 
       // 50008: Illegal token; 50012: Other clients logged in; 50014: Token expired;
-      if (res.code === 50008 || res.code === 50012 || res.code === 50014) {
+      if (res.code === 4001 || res.code === 50012 || res.code === 50014) {
         // to re-login
         MessageBox.confirm('您的登陆已超时', '确认退出', {
           confirmButtonText: '重新登陆',

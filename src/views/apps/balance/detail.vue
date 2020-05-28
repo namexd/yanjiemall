@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <back-to-prev detail="提现申请详情"></back-to-prev>
+    <back-to-prev path-name="balance" detail="提现申请详情"></back-to-prev>
     <el-row>
       <el-col :span="24">
         <el-steps :active="2">

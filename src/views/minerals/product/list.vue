@@ -57,7 +57,7 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.per_page" @pagination="getMineral"/>
 
     <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑挖矿券':'新增挖矿券'">
-      <el-form :model="mineral"   label-position="left" label-width="100px" >
+      <el-form :model="mineral"   label-position="left" label-width="120px" >
         <el-form-item label="显示排序" required>
           <el-input v-model="mineral.sort" placeholder="显示排序" style="width: 50%"/>
         </el-form-item>
@@ -73,13 +73,15 @@
         <el-row>
           <el-col :span="11">
             <el-form-item label="最低价格" required>
-              <el-input v-model="mineral.min_money" placeholder="最低价格" style="width: 100%"/>
+              <el-input v-model="mineral.min_money" v-if="mineral.id" disabled placeholder="最低价格" style="width: 100%"/>
+              <el-input v-model="mineral.min_money" v-else placeholder="最低价格" style="width: 100%"/>
             </el-form-item>
           </el-col>
           <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
             <el-form-item label="最高价格" required>
-              <el-input v-model="mineral.max_money" placeholder="最高价格" style="width: 100%"/>
+              <el-input v-model="mineral.max_money" v-if="mineral.id" disabled placeholder="最高价格" style="width: 100%"/>
+              <el-input v-model="mineral.max_money" v-else placeholder="最高价格" style="width: 100%"/>
             </el-form-item>
           </el-col>
         </el-row>
@@ -92,12 +94,18 @@
           <el-col class="line" :span="2">-</el-col>
           <el-col :span="11">
             <el-form-item label="结束时间" required>
-              <el-time-picker value-format="HH:mm" format="HH:mm"  type="datetime" placeholder="选择时间" v-model="mineral.end_time" style="width: 100%;"></el-time-picker>
+              <el-select v-model="end_time" placeholder="请选择">
+                <el-option
+                  label="开抢后五分钟"
+                  :value="5"
+                   selected>
+                </el-option>
+              </el-select>
             </el-form-item>
           </el-col>
           </el-row>
         <el-form-item label="周期" required>
-          <el-input v-model="mineral.days" placeholder="周期" style="width: 50%"/>
+          <el-input v-model="mineral.days" placeholder="周期" style="width: 30% "/><span style="margin-left: 10px">天</span>
         </el-form-item>
         <el-form-item label="收益" required>
           <el-input v-model="mineral.percent" placeholder="收益" style="width: 30%"/> <span style="margin-left: 10px">%</span>
@@ -108,10 +116,10 @@
                        :value="item.key"/>
           </el-select>
         </el-form-item>
-        <el-form-item label="加速" required>
+        <el-form-item label="加速(消费券)" required >
           <el-input v-model="mineral.low_speed" placeholder="请输入消费券数量" style="width: 30%"/> <span style="margin-left: 10px">低档</span>
         </el-form-item>
-        <el-form-item   required>
+        <el-form-item  required>
           <el-input v-model="mineral.medium_speed" placeholder="请输入消费券数量" style="width: 30%"/> <span style="margin-left: 10px">中档</span>
         </el-form-item>
         <el-form-item   required>
@@ -138,7 +146,7 @@
     deleteMineral,
     getMineral,
   } from '../../../api/minerals'
-  import { deepClone } from '../../../utils'
+  import { deepClone ,parseTime} from '../../../utils'
 
   const productLabelOptions = [
     { key: 1, display_name: '新手' },
@@ -173,6 +181,7 @@
         dialogVisible: false,
         dialogType: 'new',
         total: 0,
+        end_time: 5,
         listLoading: true,
         listQuery: {
           page: 1,
@@ -205,39 +214,46 @@
         })
       },
       handleDelete({ $index, row }) {
-        this.$confirm('确定要删除此挖矿券吗?', 'Warning', {
-          confirmButtonText: '删除',
-          cancelButtonText: '取消',
-          type: 'warning'
-        })
-          .then(async() => {
-            await deleteMineral(row.id)
-            this.mineralList.splice($index, 1)
-            this.$message({
-              type: 'success',
-              message: '删除成功!'
+          this.$prompt('请输入管理员密码', '确定要删除此挖矿券吗?', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            inputPattern: /\S/,
+            inputErrorMessage: '请输入密码'
+          }).then(({ value }) => {
+            deleteMineral(row.id,{pwd:value}).then(res=>{
+              if (res.code==0){
+                this.mineralList.splice($index, 1)
+                this.$message({
+                  type: 'success',
+                  message: '删除成功!'
+                })}else {
+                this.$message.error('删除失败')
+              }
             })
-          })
-          .catch(err => {
-            console.error(err)
-          })
+          }).catch(() => {
+          });
+        this.getMineral()
       },
       async confirmMineral() {
         const isEdit = this.dialogType === 'edit'
         let params=deepClone(this.mineral)
+       const newDay=new Date()
+        const newTime=new Date(newDay.getFullYear()+' '+params.start_time+':00')
+        const min=(newTime.getMinutes())
+        newTime.setMinutes(min+5);
+        params.end_time=parseTime(newTime,'{h}:{i}')
         if (isEdit) {
           delete params.id
-          await updateMineral(this.mineral.id,params)
+           updateMineral(this.mineral.id,params).then(res=>{
+             res.code==0?this.$message.success('编辑成功'):this.$message.error('编辑失败')
+           })
         } else {
-          await addMineral(params)
+           addMineral(params).then(res=>{
+             res.code==0?this.$message.success('添加成功'):this.$message.error('添加失败')
+           })
         }
         this.getMineral()
         this.dialogVisible = false
-        this.$notify({
-          title: 'Success',
-          message: '操作成功！',
-          type: 'success'
-        })
       }
     }
   }

@@ -107,7 +107,7 @@ export function getConfigs() {
     method: 'get',
   })
 }
-export function updateConfig(data) {
+export function updateConfigLevel(data) {
   return request({
     url: '/config/level',
     method: 'put',
@@ -115,6 +115,27 @@ export function updateConfig(data) {
   })
 }
 
+export function updateConfigSeat(data) {
+  return request({
+    url: '/config/seat',
+    method: 'put',
+    data
+  })
+}
+
+export function getAdminRules(id) {
+  return request({
+    url: `/admin/${id}/rule`,
+    method: 'get',
+  })
+}
+export function updateAdminRules(id,data) {
+  return request({
+    url: `/admin/${id}/rule`,
+    method: 'put',
+    data
+  })
+}
 export function getAdmins(query) {
   return request({
     url: '/admin',
@@ -146,5 +167,13 @@ export function deleteAdmin(id) {
   return request({
     url: `/admin/${id}`,
     method: 'delete',
+  })
+}
+
+export function getOptLogs(query) {
+  return request({
+    url: '/oplog',
+    method: 'get',
+    params:query
   })
 }

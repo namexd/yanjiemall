@@ -5,7 +5,8 @@
         <el-row>
           <el-col :span="4">
             <el-form-item label="订单名称" class="postInfo-container-item">
-              <el-input v-model="listQuery.order_no" placeholder="请输入订单编号" clearable style="width: 200px;" class="filter-item"
+              <el-input v-model="listQuery.order_no" placeholder="请输入订单编号" clearable style="width: 200px;"
+                        class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
@@ -85,16 +86,22 @@
           <div>
             <el-row v-for="good in scope.row.goods" style="border-bottom: 1px solid #dfe6ec">
               <el-col :span="8">
-                <div class="grid-content bg-purple"><img :src="good.goods_cover_pic" alt=""></div>
+                <div>
+                  <el-image
+                    style="width: 60px; height: 60px"
+                    :src="good.goods_cover_pic"
+                    :preview-src-list="[good.goods_cover_pic]">
+                  </el-image>
+                </div>
               </el-col>
               <el-col :span="8">
-                <div class="grid-content bg-purple"> {{good.goods_name}}<br>
+                <div style="text-align: left"> {{good.goods_name}}<br>
                   {{good.sku_name}}
                 </div>
               </el-col>
               <el-col :span="8">
                 <div class="grid-content bg-purple"> x{{good.price}}<br>
-                  x{{good.sku_name}}
+                  x{{good.order_num}}
                 </div>
               </el-col>
             </el-row>
@@ -140,7 +147,7 @@
             <el-button type="danger" size="mini" @click="closeOrder(scope.row)">
               关闭
             </el-button>
-            <el-button type="warning" size="mini" @click="showOrders(scope.row.id)">
+            <el-button type="warning" size="mini" @click="changeOrderPrice(scope.row.id)">
               改价
             </el-button>
           </div>
@@ -195,7 +202,7 @@
         <el-button type="primary" @click="postExpress">确 定</el-button>
       </div>
     </el-dialog>
-    <el-dialog title="退款" :visible.sync="dialogCloseVisible">
+    <el-dialog title="关闭订单/退款" :visible.sync="dialogCloseVisible">
       <el-form :model="closeParam">
         <el-form-item label="" label-width="50px">
           是否退款并关闭订单
@@ -210,6 +217,69 @@
         <el-button type="primary" @click="postClose">确 定</el-button>
       </div>
     </el-dialog>
+
+    <el-dialog title="订单改价" :visible.sync="dialogChangePriceVisible">
+      <el-row>
+        <el-col :span="24">
+          <el-table
+            :data="changeData"
+             >
+            <el-table-column
+              label="商品名称"
+              >
+              <template slot-scope="scope">
+                {{ scope.row.goods_name }}-{{scope.row.sku_name}}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="单价"
+              >
+              <template slot-scope="scope">
+                ￥{{ scope.row.price }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="数量">
+              <template slot-scope="scope">
+                {{ scope.row.order_num }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="小计">
+              <template slot-scope="scope">
+                {{ (scope.row.order_num)*(scope.row.price ) }}
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="改价">
+              <template slot-scope="scope">
+                <el-input v-model="scope.row.modify_price"></el-input>
+              </template>
+            </el-table-column>
+            <el-table-column
+              label="运费">
+              <template slot-scope="scope">
+                <el-input v-if="scope.$index==0" v-model="changePriceParam.freight"></el-input>
+              </template>
+            </el-table-column>
+          </el-table>
+        </el-col>
+      </el-row>
+      <el-row>
+        <el-col :span="24">
+         <div style="text-align: right">
+          <p>  实付：改价+运费 </p>
+         <span v-for="p in changeData">￥{{p.modify_price}}+</span>
+           <span>￥{{changePriceParam.freight}}=</span>
+           <span style="color: red">￥{{getTotal()+Number(changePriceParam.freight)}}</span>
+         </div>
+        </el-col>
+      </el-row>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogChangePriceVisible = false">取 消</el-button>
+        <el-button type="primary" @click="postChange">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 </template>
 
@@ -222,7 +292,7 @@
   import waves from '@/directive/waves' // waves directive
 
   import { objectMerge } from '../../utils'
-  import { closeOrder, expressOrder, getOrders } from '../../api/orders'
+  import { closeOrder, expressOrder, getOrderPrice, getOrders, putOrderPrice } from '../../api/orders'
 
   const ordersFilter = {
     waitPay: {
@@ -288,10 +358,16 @@
         timeType: 'create_begin_at',
         timeValue: '',
         total_address: '',
+        changePriceParam: {
+          goods:'',
+          freight:0
+        },
         closeParam: {},
         orderList: [],
+        changeData: [],
         dialogFormVisible: false,
         dialogCloseVisible: false,
+        dialogChangePriceVisible: false,
         listQuery: {
           page: 1,
           per_page: 20
@@ -343,6 +419,14 @@
         this.dialogCloseVisible = true
         this.closeParam.id = row.id
       },
+      changeOrderPrice(id) {
+        this.dialogChangePriceVisible = true
+        this.changePriceParam.id = id
+        getOrderPrice(id).then(res=>{
+          this.changeData=res.data.goods
+          this.changePriceParam.freight=res.data.freight
+        })
+      },
       handleDelete({ $index, row }) {
         this.$confirm('确定要删除此订单吗?', 'Warning', {
           confirmButtonText: '删除',
@@ -389,6 +473,24 @@
           this.$message.success('订单关闭成功')
           this.getOrders()
         })
+      },
+      postChange() {
+        const param = deepClone(this.changePriceParam)
+        let id = this.changePriceParam.id
+        delete param.id
+        param.goods=JSON.stringify(this.changeData)
+        putOrderPrice(id, param).then(res => {
+          this.dialogChangePriceVisible = false
+          this.$message.success('订单改价成功')
+          this.getOrders()
+        })
+      },
+      getTotal() {
+        let total_change=0
+        this.changeData.forEach((i)=>{
+          total_change+=Number(i.modify_price)
+        })
+        return total_change
       }
     }
   }

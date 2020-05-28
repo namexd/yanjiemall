@@ -2,42 +2,46 @@
   <div>
     <el-menu
       :default-active="activeName"
-      @select="handleClick"
       class="el-menu-demo"
       mode="horizontal"
       background-color="#000"
       text-color="#fff"
       active-text-color="#ffd04b">
-      <el-menu-item index="index">首页</el-menu-item>
-      <el-menu-item index="users">会员</el-menu-item>
-      <el-menu-item index="goods">商品</el-menu-item>
-      <el-menu-item index="orders">订单</el-menu-item>
-      <el-menu-item index="minerals">挖矿卷</el-menu-item>
-      <el-menu-item index="vouchers">消费券</el-menu-item>
-      <el-menu-item index="settings">设置</el-menu-item>
-      <el-menu-item index="apps">应用</el-menu-item>
+      <el-menu-item index="index" @click="goHome()">首页</el-menu-item>
+      <el-menu-item v-for="menu in parentMenu" :index="getName(menu.menu_url)" @click="handleClick(menu)">{{menu.menu_name}}</el-menu-item>
     </el-menu>
-
-
   </div>
 
 </template>
 
 <script>
-
+  import { getMenus } from '../../api/menu'
   export default {
     data() {
       return {
-        activeName: this.$route.name
+        activeName: this.$route.name,
+        parentMenu:[]
       }
     },
     methods: {
-      handleClick(key, event) {
-        this.$router.push({ name: key, query: { type: key } })
-
+      goHome(){
+        this.$router.push({name:'index'})
+      },
+      handleClick(menu) {
+        this.$router.push({ name: this.getName(menu.menu_url), query: { type: menu.id } })
+      },
+      getMenus(){
+        getMenus({pid:0}).then(res=>{
+          this.parentMenu=res.data
+        })
+      },
+      getName(path)
+      {
+        return (path.split('/'))[1]
       }
     },
     created() {
+      this.getMenus();
       const pathname = window.location.hash
       const route = (pathname.split('/'))[1]
       this.activeName = route

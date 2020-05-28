@@ -67,7 +67,7 @@
 
 <script>
   import waves from '@/directive/waves' // waves directive
-  import { getConfigs, updateConfig } from '../../api/settings' // secondary package based on el-pagination
+  import { getConfigs, updateConfigLevel } from '../../api/settings' // secondary package based on el-pagination
   export default {
     name: 'UserLevel',
     directives: { waves },
@@ -97,13 +97,7 @@
       },
       handleSubmit() {
         this.dialogFormVisible = false
-        const params = {
-          default_user_level_name: this.level.default_user_level_name,
-          default_user_level_desc: this.level.default_user_level_desc,
-          default_user_level_status: this.level.default_user_level_status,
-          default_user_discount: this.level.default_user_discount
-        }
-        updateConfig(params).then(res => {
+        updateConfigLevel(this.level).then(res => {
           this.$message.success('修改成功！')
         })
       }

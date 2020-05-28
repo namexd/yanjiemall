@@ -1,61 +1,37 @@
 <template>
-  <el-table :data="list" style="width: 100%;padding-top: 15px;">
+  <el-table :data="area_data" style="width: 100%;padding-top: 15px;">
     <el-table-column label="排名"  align="center">
       <template slot-scope="scope">
-        {{ scope.row.order_no | orderNoFilter }}
+        {{ scope.$index +1 }}
       </template>
     </el-table-column>
     <el-table-column label="省份"  align="center">
       <template slot-scope="scope">
-        {{ scope.row.price | toThousandFilter }}
+        {{ scope.row.area_name }}
       </template>
     </el-table-column>
-
-    <el-table-column label="会员数" align="center">
-      <template slot-scope="{row}">
-        <el-tag :type="row.status | statusFilter">
-          {{ row.status }}
-        </el-tag>
+    <el-table-column label="会员数"  align="center">
+      <template slot-scope="scope">
+        {{ scope.row.user_num }}
       </template>
     </el-table-column>
     <el-table-column label="占比"  align="center">
       <template slot-scope="scope">
-        %{{ scope.row.price | toThousandFilter }}
+       {{ scope.row.user_prop }}
       </template>
     </el-table-column>
   </el-table>
 </template>
 
 <script>
-import { transactionList } from '@/api/remote-search'
-
 export default {
-  filters: {
-    statusFilter(status) {
-      const statusMap = {
-        success: 'success',
-        pending: 'danger'
+  props:{
+    area_data:{
+      type: Array,
+      default: () => {
+        return []
       }
-      return statusMap[status]
     },
-    orderNoFilter(str) {
-      return str.substring(0, 30)
-    }
   },
-  data() {
-    return {
-      list: null
-    }
-  },
-  created() {
-    this.fetchData()
-  },
-  methods: {
-    fetchData() {
-      transactionList().then(response => {
-        this.list = response.data.items.slice(0, 8)
-      })
-    }
-  }
 }
 </script>

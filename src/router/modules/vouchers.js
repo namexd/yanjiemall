@@ -4,12 +4,18 @@ const vouchersRouters = {
   path: '/vouchers',
   component: Layout,
   redirect:'/vouchers/sales',
-  name: 'vouchers',
   meta: {
     title: '消费券',
-    icon: '消费券'
+    icon: '消费券',
   },
   children: [
+    {
+      path: 'index',
+      component: () => import('@/views/vouchers/index'),
+      name: 'vouchers',
+      hidden:true,
+      meta: { title: '消费券' },
+    },
     {
       path: 'sales',
       component: () => import('@/views/vouchers/sale/index'),

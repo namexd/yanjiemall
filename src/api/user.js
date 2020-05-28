@@ -17,7 +17,7 @@ export function getInfo(token) {
 }
 export function getUsersIndex() {
   return request({
-    url: '/mock/151/user',
+    url: '/stat/user',
     method: 'get',
   })
 }
@@ -59,6 +59,13 @@ export function addMine(id,data) {
 export function addGold(id,data) {
   return request({
     url:  `/user/${id}/goldcoin`,
+    method: 'put',
+    data
+  })
+}
+export function addVoucher(id,data) {
+  return request({
+    url:  `/user/${id}/voucher`,
     method: 'put',
     data
   })

@@ -93,3 +93,9 @@ export function deleteGoods(id) {
     method: 'delete'
   })
 }
+export function getGoodModules() {
+  return request({
+    url: '/goods/index/modules',
+    method: 'get'
+  })
+}

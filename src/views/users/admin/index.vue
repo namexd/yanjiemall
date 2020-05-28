@@ -1,9 +1,9 @@
 <template>
   <div class="dashboard-editor-container">
-    <panel-group @handleSetLineChartData="handleSetLineChartData" />
+    <panel-group :total_data="data" @handleSetLineChartData="handleSetLineChartData" />
     <el-row :gutter="8">
       <el-col :xs="{span: 48}" :sm="{span: 48}" :md="{span: 48}" :lg="{span: 24}" :xl="{span:24}" style="padding-right:8px;margin-bottom:30px;">
-        <transaction-table />
+        <transaction-table :area_data="data.area_data"/>
       </el-col>
     </el-row>
   </div>
@@ -12,6 +12,7 @@
 <script>
 import PanelGroup from './components/PanelGroup'
 import TransactionTable from './components/TransactionTable'
+import { getUsersIndex } from '../../../api/user'
 
 const lineChartData = {
   newVisitis: {
@@ -40,10 +41,19 @@ export default {
   },
   data() {
     return {
-      lineChartData: lineChartData.newVisitis
+      lineChartData: lineChartData.newVisitis,
+      data:{},
     }
   },
+  created() {
+    this.fetchData()
+  },
   methods: {
+    fetchData(){
+      getUsersIndex().then(response=>{
+        this.data=response.data;
+      })
+    },
     handleSetLineChartData(type) {
       this.lineChartData = lineChartData[type]
     }

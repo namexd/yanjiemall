@@ -59,7 +59,7 @@
     methods: {
       goBack()
       {
-        this.$router.back()
+        this.$router.push({path:'list'})
       },
       getUser() {
         let id=this.$route.query.id

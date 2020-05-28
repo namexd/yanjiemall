@@ -9,7 +9,7 @@
           <div class="card-panel-text">
             累计会员
           </div>
-          <count-to :start-val="0" :end-val=this.panelGroupData.count :duration="100" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val=total_data.total_user :duration="100" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -22,7 +22,7 @@
           <div class="card-panel-text">
             付费会员
           </div>
-          <count-to :start-val="0" :end-val=this.panelGroupData.pay :duration="100" class="card-panel-num"/>
+          <count-to :start-val="0" :end-val=total_data.total_pay_user :duration="100" class="card-panel-num"/>
         </div>
       </div>
     </el-col>
@@ -37,6 +37,15 @@
     components: {
       CountTo
     },
+    props:{
+      total_data: {
+        type: Object,
+        default: () => {
+          return {
+          }
+        }
+      }
+    },
     data() {
       return {
         panelGroupData: {
@@ -45,15 +54,8 @@
         },
       }
     },
-    created() {
-      this.fetchData()
-    },
     methods: {
-      fetchData(){
-        getUsersIndex().then(response=>{
-          this.panelGroupData=response.data;
-        })
-      },
+
       handleSetLineChartData(type) {
         this.$emit('handleSetLineChartData', type)
       }

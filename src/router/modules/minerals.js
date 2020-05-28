@@ -3,13 +3,19 @@ import Layout from '@/layout'
 const mineralsRouters = {
   path: '/minerals',
   component: Layout,
-  redirect:'/minerals/products',
-  name: 'minerals',
+  redirect:'/minerals/index',
   meta: {
     title: '挖矿券',
     icon: '挖矿'
   },
   children: [
+    {
+      path: 'index',
+      component: () => import('@/views/minerals/index'),
+      hidden: true,
+      name: 'minerals',
+      meta: { title: '挖矿券', icon: '挖矿2' },
+    },
     {
       path: 'products',
       component: () => import('@/views/minerals/product/list'),

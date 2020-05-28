@@ -18,10 +18,18 @@ const appsRouters = {
     },
     {
       path: 'teamBonus',
-      component: () => import('@/views/settings/banners/list'),
+      component: () => import('@/views/apps/team/index'),
+      redirect:'/apps/teamBonus/index',
       name: 'teamBonus ',
       meta: { title: '团队分红', icon: '分红' },
       children:[
+        {
+          path: 'index',
+          component: () => import('@/views/apps/team/stat'),
+          name: 'teamBonusIndex',
+          hidden:true,
+          meta: { title: '团队分红',  }
+        },
         {
           path: 'bonus_leader',
           component: () => import('@/views/table/inline-edit-table'),
@@ -46,23 +54,32 @@ const appsRouters = {
       path: 'distribution',
       component: () => import('@/views/apps/distribution/index'),
       name: 'distribution ',
+      redirect:'/apps/distribution/index',
       meta: { title: '分销', icon: '分销' },
       children:[
         {
+          path: 'index',
+          component: () => import('@/views/apps/distribution/stat'),
+          name: 'distributionIndex',
+          hidden:true,
+          meta: { title: '团队分红',  },
+          activeMenu: '/apps/distribution/distribution_list'
+        },
+        {
           path: 'distribution_list',
-          component: () => import('@/views/apps/promoter/list'),
+          component: () => import('@/views/apps/distribution/promoter/list'),
           name: 'distributionList',
           meta: { title: '分销商列表',icon: '列表' }
         },
         {
           path: 'distribution_orders',
-          component: () => import('@/views/table/inline-edit-table'),
+          component: () => import('@/views/apps/distribution/order/index'),
           name: 'distributionOrders',
           meta: { title: '分销订单',icon: '订单' }
         },
         {
           path: 'distribution_level',
-          component: () => import('@/views/apps/promoter/level'),
+          component: () => import('@/views/apps/distribution/promoter/level'),
           name: 'distributionLevel',
           meta: { title: '分销商等级',icon: '设置' }
         },

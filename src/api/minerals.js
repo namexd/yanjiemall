@@ -1,5 +1,12 @@
 import request from '@/utils/request'
 
+export function getMineralsStat(query) {
+  return request({
+    url: '/stat/mine',
+    method: 'get',
+    params: query
+  })
+}
 export function getMinerals(query) {
   return request({
     url: '/mine/product',
@@ -29,10 +36,11 @@ export function addMineral(data) {
   })
 }
 
-export function deleteMineral(id) {
+export function deleteMineral(id,data) {
   return request({
     url: `/mine/product/${id}`,
-    method: 'delete'
+    method: 'delete',
+    data
   })
 }
 

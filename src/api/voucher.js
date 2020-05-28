@@ -1,5 +1,11 @@
 import request from '@/utils/request'
 
+export function getVoucherStat() {
+  return request({
+    url: '/stat/voucher',
+    method: 'get',
+  })
+}
 export function getSales(query) {
   return request({
     url: '/voucher/sale',

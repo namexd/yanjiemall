@@ -65,7 +65,7 @@
     },
     methods: {
       goBack() {
-        this.$router.back()
+        this.$router.push({name:'orderAll'})
       },
       getOrder() {
         let id = this.$route.query.id

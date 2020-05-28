@@ -20,13 +20,13 @@
 
       <el-dropdown class="avatar-container right-menu-item hover-effect" trigger="click">
         <div class="avatar-wrapper">
-          <img :src="avatar+'?imageView2/1/w/80/h/80'" class="user-avatar">
+         <span style="color: white">{{getName()}}</span>
           <i class="el-icon-caret-bottom" />
         </div>
         <el-dropdown-menu slot="dropdown">
-          <router-link to="/profile/index">
-            <el-dropdown-item>个人中心</el-dropdown-item>
-          </router-link>
+<!--          <router-link to="/profile/index">-->
+<!--            <el-dropdown-item>个人中心</el-dropdown-item>-->
+<!--          </router-link>-->
           <el-dropdown-item divided @click.native="logout">
             <span style="display:block;">退出</span>
           </el-dropdown-item>
@@ -44,6 +44,7 @@ import ErrorLog from '@/components/ErrorLog'
 import Screenfull from '@/components/Screenfull'
 import SizeSelect from '@/components/SizeSelect'
 import Search from '@/components/HeaderSearch'
+import { getUsername } from '@/utils/auth'
 
 export default {
   components: {
@@ -58,10 +59,14 @@ export default {
     ...mapGetters([
       'sidebar',
       'avatar',
+      'name',
       'device'
     ])
   },
   methods: {
+    getName(){
+       return getUsername()
+    },
     toggleSideBar() {
       this.$store.dispatch('app/toggleSideBar')
     },

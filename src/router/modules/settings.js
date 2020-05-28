@@ -53,8 +53,15 @@ const settingsRouters = {
       meta: { title: '权限管理', icon: '权限' }
     },
     {
+      path: 'permissionDetail',
+      component: () => import('@/views/settings/permission/role'),
+      name: 'permissionDetail',
+      hidden:true,
+      meta: { title: '编辑权限' }
+    },
+    {
       path: 'logs',
-      component: () => import('@/views/goods/category'),
+      component: () => import('@/views/settings/logs/index'),
       name: 'logs',
       meta: { title: '操作日志', icon: 'bug' }
     }

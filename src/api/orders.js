@@ -1,5 +1,11 @@
 import request from '@/utils/request'
 
+export function getOrderStat() {
+  return request({
+    url: '/stat/order',
+    method: 'get',
+  })
+}
 export function getOrders(query) {
   return request({
     url: '/order',
@@ -13,6 +19,21 @@ export function getOrder(id) {
     method: 'get',
   })
 }
+export function getOrderPrice(id) {
+  return request({
+    url: `/order/change/${id}`,
+    method: 'get',
+  })
+}
+
+export function putOrderPrice(id,data) {
+  return request({
+    url: `/order/change/${id}`,
+    method: 'put',
+    data
+  })
+}
+
 export function closeOrder(id,data) {
   return request({
     url: `/order/close/${id}`,

@@ -37,7 +37,7 @@
                 消费券
               </div>
               <span>{{user.share_mine}}</span>
-              <el-button type="text">充值</el-button>
+              <el-button type="text" @click="addVoucher">充值</el-button>
             </div>
           </el-col>
         </el-row>
@@ -154,7 +154,7 @@
     </el-dialog>
     <el-dialog title="充值金币" :visible.sync="dialogGoldVisible">
       <el-form :model="goldParams">
-        <el-form-item label="余额" label-width="150px" required>
+        <el-form-item label="金额" label-width="150px" required>
           <el-input type="number" v-model="goldParams.amount" autocomplete="off"></el-input>
         </el-form-item>
         <el-form-item label="备注" label-width="150px" required>
@@ -166,6 +166,20 @@
         <el-button type="primary" @click="postGold">确 定</el-button>
       </div>
     </el-dialog>
+    <el-dialog title="充值消费券" :visible.sync="dialogVouchersVisible">
+      <el-form :model="vouchersParams">
+        <el-form-item label="数量" label-width="150px" required>
+          <el-input type="number" v-model="vouchersParams.amount" autocomplete="off"></el-input>
+        </el-form-item>
+        <el-form-item label="备注" label-width="150px" required>
+          <el-input type="textarea" v-model="vouchersParams.remarks" autocomplete="off"></el-input>
+        </el-form-item>
+      </el-form>
+      <div slot="footer" class="dialog-footer">
+        <el-button @click="dialogVouchersVisible = false">取 消</el-button>
+        <el-button type="primary" @click="postVoucher">确 定</el-button>
+      </div>
+    </el-dialog>
   </div>
 
 </template>
@@ -174,7 +188,7 @@
   import Pagination from '@/components/Pagination'
   import waves from '@/directive/waves' // waves directive
 
-  import { addGold, addMine, getUserMines, userBlack } from '../../../../api/user'
+  import { addGold, addMine, addVoucher, getUserMines, userBlack } from '../../../../api/user'
   import { getMinerals } from '../../../../api/minerals'
 
   const stateTypes = [
@@ -223,6 +237,11 @@
         dialogMineVisible: false,
         dialogGoldVisible: false,
         dialogMineListVisible: false,
+        dialogVouchersVisible: false,
+        vouchersParams: {
+          user_id:this.$route.query.id,
+          type:1
+        },
         mineParams: {},
         goldParams: {
           user_id:this.$route.query.id,
@@ -273,6 +292,9 @@
       addGold() {
         this.dialogGoldVisible = true
       },
+      addVoucher() {
+        this.dialogVouchersVisible = true
+      },
       postMine() {
         this.dialogMineVisible = false
         addMine(this.$route.query.id, this.mineParams).then(res => {
@@ -292,6 +314,17 @@
             this.user.left_gold_coin=Number(this.user.left_gold_coin)+Number(this.goldParams.amount)
           } else {
             this.$message.success('充值金币失败')
+          }
+        })
+      },
+      postVoucher() {
+        this.dialogVouchersVisible = false
+        addVoucher(this.$route.query.id, this.vouchersParams).then(res => {
+          if (res.code == 0) {
+            this.$message.success('充值消费券成功')
+            this.user.share_mine=Number(this.user.share_mine)+Number(this.vouchersParams.amount)
+          } else {
+            this.$message.success('充值消费券失败')
           }
         })
       }

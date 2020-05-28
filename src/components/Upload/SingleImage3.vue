@@ -6,6 +6,7 @@
       list-type="picture-card"
       :on-preview="handlePictureCardPreview"
       :file-list="imgList"
+      :show-file-list="true"
       :limit="10"
       :on-remove="handleRemove">
       <i class="el-icon-plus"></i>
@@ -18,18 +19,14 @@
 
 <script>
   import { uuid } from '../../utils'
-
   const baidubce = require('@baiducloud/bos-uploader')
   import { getToken } from '../../api/upload'
-
   export default {
     props: {
       value: ''
     },
-    computed: {
-      imageUrl() {
-        return this.value
-      }
+    created() {
+       this.imageUrl()
     },
     data() {
       return {
@@ -40,6 +37,12 @@
       }
     },
     methods: {
+      imageUrl() {
+        this.value.forEach((i)=>{
+          this.imgList.push({url:i})
+        })
+        this.valueList=this.value
+      },
       upload(file, detail) {
         getToken().then(response => {
           this.uploadImage(response.data, file.file)
@@ -90,6 +93,13 @@
       },
       handleRemove(file, fileList) {
         this.imgList = fileList
+        const url=[];
+        fileList.forEach((item)=>{
+          url.push(item.url)
+        })
+        console.log(url)
+        this.valueList=url
+        this.emitInput(url)
       },
       handlePictureCardPreview(file) {
         this.dialogImageUrl = file.url
@@ -99,6 +109,7 @@
   }
 </script>
 <style>
+
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
