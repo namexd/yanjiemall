@@ -33,6 +33,45 @@ export function deleteBanner(id) {
     method: 'delete',
   })
 }
+export function getPays(query) {
+  return request({
+    url: '/config-pay',
+    method: 'get',
+    params:query
+  })
+}
+export function updatePay(id,data) {
+  return request({
+    url: `/config-pay/${id}`,
+    method: 'put',
+    data
+  })
+}
+export function changePay(id) {
+  return request({
+    url: `/config-pay/${id}/show`,
+    method: 'put',
+  })
+}
+export function addPay(data) {
+  return request({
+    url: '/config-pay',
+    method: 'post',
+    data
+  })
+}
+export function showPay(id) {
+  return request({
+    url: `/config-pay/${id}`,
+    method: 'get',
+  })
+}
+export function deletePay(id) {
+  return request({
+    url: `/config-pay/${id}`,
+    method: 'delete',
+  })
+}
 
 export function getNav(query) {
   return request({

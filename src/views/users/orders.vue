@@ -14,7 +14,13 @@
         <template slot-scope="scope">
           <div>
             <el-row v-for="good in scope.row.goods" style="border-bottom: 1px solid #dfe6ec">
-              <el-col :span="8"><div class="grid-content bg-purple">  <img :src="good.goods_cover_pic" alt=""></div></el-col>
+              <el-col :span="8"><div class="grid-content bg-purple">
+
+                <el-image
+                  style="width: 60px; height: 60px"
+                  :src="good.goods_cover_pic"
+                  :preview-src-list="[good.goods_cover_pic]">
+                </el-image></div></el-col>
               <el-col :span="8"><div class="grid-content bg-purple">  {{good.goods_name}}<br>
                 {{good.sku_name}}</div></el-col>
               <el-col :span="8"><div class="grid-content bg-purple"> x{{good.price}}<br>

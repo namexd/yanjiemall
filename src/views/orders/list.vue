@@ -52,14 +52,6 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <!--          <el-col :span="4">-->
-          <!--            <el-form-item label="维权状态:" class="postInfo-container-item">-->
-          <!--              <el-select v-model="listQuery.type" placeholder="请选择" clearable class="filter-item" style="width: 130px">-->
-          <!--                <el-option v-for="item in OrdersTypes" :key="item.key" :label="item.display_name"-->
-          <!--                           :value="item.key"/>-->
-          <!--              </el-select>-->
-          <!--            </el-form-item>-->
-          <!--          </el-col>-->
           <el-col :span="4">
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
               搜索
@@ -120,6 +112,12 @@
           （运费：{{scope.row.freight}}）
         </template>
       </el-table-column>
+      <el-table-column align="center" label="实付款">
+        <template slot-scope="scope">
+          {{ scope.row.actual_price }}<br>
+          （运费：{{scope.row.freight}}）
+        </template>
+      </el-table-column>
       <el-table-column align="center" label="支付方式">
         <template slot-scope="scope">
           {{ calendarTypeKeyValue[scope.row.pay_type] }}
@@ -156,9 +154,9 @@
             <el-button type="danger" size="mini" @click="handelExpressOrder(scope.row)">
               立即发货
             </el-button>
-            <el-button type="warning" size="mini" @click="closeOrder(scope.row)">
-              退款
-            </el-button>
+<!--            <el-button type="warning" size="mini" @click="closeOrder(scope.row)">-->
+<!--              退款-->
+<!--            </el-button>-->
           </div>
           <div v-if="scope.row.status==3">
             <span>待收货</span><br>

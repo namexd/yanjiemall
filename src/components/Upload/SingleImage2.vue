@@ -27,6 +27,11 @@
         return this.value
       }
     },
+    watch: {
+      value(val) {
+        this.value=val
+      }
+    },
     data() {
       return {
         dataObj: {},

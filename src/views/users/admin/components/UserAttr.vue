@@ -10,8 +10,8 @@
         <el-col :span="8">
           <div class="card-panel-description">
             <div class="progress-item">
-              <span>会员等级</span>
-              <span>{{user.user_level}}</span>
+              <b>会员等级</b>
+              <span>普通会员</span>
             </div>
           </div>
         </el-col>
@@ -20,31 +20,68 @@
         <el-col :span="8">
           <div class="card-panel-description">
             <div class="progress-item">
-              <b>账号权重</b>
-              <span>{{user.user_power}}</span>
+              <b>账号总权重</b>
+              <span>{{user.total_score}}</span>
             </div>
           </div>
         </el-col>
       </el-row>
-
+      <el-row :gutter="20">
+        <el-col :span="8">
+          <div class="card-panel-description">
+            <div class="progress-item">
+              <b>可修改权重</b>
+              <span>{{user.trust_score}}</span>
+              <el-button type="text" @click="handelEdit" style="padding: 0">编辑</el-button>
+            </div>
+          </div>
+        </el-col>
+      </el-row>
+      <el-dialog
+        title="修改权重"
+        :visible.sync="dialogVisible"
+      >
+        <el-form label-width="150px">
+          <el-form-item label="账号权重">
+            <el-input v-model="user.trust_score" autocomplete="off"></el-input>
+          </el-form-item>
+        </el-form>
+        <div slot="footer" class="dialog-footer">
+          <el-button @click="dialogVisible = false">取 消</el-button>
+          <el-button type="primary" @click="submit">确 定</el-button>
+        </div>
+      </el-dialog>
     </div>
   </el-card>
 </template>
 
 <script>
-
+  import { changePower } from '../../../../api/user'
 
   export default {
     props: {
       user: {
         type: Object,
         default: () => {
-          return {
-          }
+          return {}
         }
       }
     },
-    methods:{
+    data() {
+      return {
+        dialogVisible: false
+      }
+    },
+    methods: {
+      handelEdit() {
+        this.dialogVisible=true
+      },
+      submit(){
+        changePower(this.$route.query.id, { trust_score: this.user.trust_score }).then(res => {
+          res.code == 0 ? this.$message.success('权重修改成功！') : this.$message.success('权重修改失败！')
+          this.dialogVisible = false
+        })
+      }
     }
   }
 </script>
@@ -54,6 +91,7 @@
     margin: 0 auto;
     display: table;
   }
+
   .card-panel-text {
     line-height: 18px;
     color: rgba(0, 0, 0, 0.45);
@@ -64,13 +102,19 @@
   .text-muted {
     color: #777;
   }
+
   .progress-item {
-    margin-bottom: 10px;
+    margin-bottom: 5px;
     font-size: 14px;
   }
+
   .user-profile {
     .user-name {
       font-weight: bold;
+    }
+
+    span {
+      padding: 0 5px;
     }
 
     .box-center {

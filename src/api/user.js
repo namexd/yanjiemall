@@ -70,6 +70,13 @@ export function addVoucher(id,data) {
     data
   })
 }
+export function changePower(id,data) {
+  return request({
+    url:  `/user/${id}/power`,
+    method: 'put',
+    data
+  })
+}
 export function getUserMines(id,query) {
   return request({
     url:  `/user/${id}/mine`,

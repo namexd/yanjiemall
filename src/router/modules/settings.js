@@ -42,7 +42,7 @@ const settingsRouters = {
     },
     {
       path: 'pay',
-      component: () => import('@/views/goods/category'),
+      component: () => import('@/views/settings/pays/list'),
       name: 'pay',
       meta: { title: '支付管理', icon: '支付' }
     },

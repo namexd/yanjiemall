@@ -37,10 +37,10 @@
     { key: 1, display_name: '支付宝' },
     { key: 2, display_name: '微信' },
     { key: 3, display_name: '金币' },
-    { key: 4, display_name: '共享券' }
+    { key: 4, display_name: '消费券' }
   ]
   const OrderTypes = [
-    { key: 1, display_name: '金币' },
+    { key: 1, display_name: '普通' },
     { key: 2, display_name: '消费券商品' },
     { key: 3, display_name: '推客商品' }
   ]

@@ -2,7 +2,7 @@
   <div class="app-container">
     <el-button style="margin-bottom: 20px" type="success" @click="handleAddGoods">新增商品</el-button>
     <div class="filter-container">
-      <el-form :model="listQuery" >
+      <el-form :model="listQuery">
         <el-row>
           <el-col :span="4">
             <el-form-item label="商品名称" class="postInfo-container-item">
@@ -40,7 +40,7 @@
       <el-table-column min-width="300px" label="权重" width="200">
         <template slot-scope="{row}">
           <template v-if="row.edit">
-            <el-input v-model="row.sort" class="edit-input" size="small" />
+            <el-input v-model="row.sort" class="edit-input" size="small"/>
             <el-button
               class="cancel-btn"
               size="small"
@@ -48,7 +48,7 @@
               type="text"
               @click="cancelEdit(row)"
             >
-             取消
+              取消
             </el-button>
           </template>
           <span v-else>{{ row.sort }}</span>
@@ -138,43 +138,47 @@
     <pagination v-show="total>0" :total="total" :page.sync="listQuery.page" :limit.sync="listQuery.per_page"
                 @pagination="getGoods"/>
 
-    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑商品':'新增商品'">
+    <el-dialog :visible.sync="dialogVisible" :title="dialogType==='edit'?'编辑商品':'新增商品'" @close="handleClose">
       <el-form :model="goods" :rules="rules" label-width="100px" label-position="left" ref="goodsForm">
-      <el-tabs v-model="activeName">
-        <el-tab-pane label="基础信息" name="first">
+        <el-tabs v-model="activeName">
+          <el-tab-pane label="基础信息" name="first">
 
             <el-form-item label="商品类型">
               <el-radio-group v-model="goods.type" size="medium">
-                <el-radio border  :disabled="dialogType==='edit'?true:false"  v-for="item in GoodsTypes" :label="item.key">{{item.display_name}}</el-radio>
+                <el-radio border :disabled="dialogType==='edit'?true:false" v-for="item in GoodsTypes"
+                          :label="item.key">{{item.display_name}}
+                </el-radio>
               </el-radio-group>
             </el-form-item>
             <el-form-item label="商品名称" prop="goods_name">
-              <el-input clearable maxlength="40" show-word-limit v-model="goods.goods_name" placeholder="商品名称" style="width: 280px"/>
+              <el-input clearable maxlength="40" show-word-limit v-model="goods.goods_name" placeholder="商品名称"
+                        style="width: 280px"/>
             </el-form-item>
             <el-form-item label="副标题">
               <el-input type="textarea" clearable v-model="goods.subtitle" placeholder="副标题" style="width: 280px"/>
             </el-form-item>
-            <el-form-item label="商品轮播图"  prop="pic_url">
-            <Upload v-model="goods.pic_url" />
+            <el-form-item  label="商品轮播图" prop="pic_url">
+              <Upload v-if="change"  v-model="goods.pic_url"/>
               <p>建议尺寸750*750像素，最多上传10张</p>
             </el-form-item>
             <el-form-item label="商品分类:" class="postInfo-container-item">
-              <el-select v-model="goods.cid" placeholder="请选择"   clearable class="filter-item" style="width: 130px">
+              <el-select v-model="goods.cid" placeholder="请选择" clearable class="filter-item" style="width: 130px">
                 <el-option v-for="item in  categoryList" :key="item.id" :label="item.name"
                            :value="item.id"/>
               </el-select>
             </el-form-item>
-          <el-form-item label="是否推荐:" v-if="goods.type==1">
-            <el-radio v-model="goods.is_pick" :label="1">推荐</el-radio>
-            <el-radio v-model="goods.is_pick" :label="0">不推荐</el-radio>
+            <el-form-item label="是否推荐:" v-if="goods.type==1">
+              <el-radio v-model="goods.is_pick" :label="1">推荐</el-radio>
+              <el-radio v-model="goods.is_pick" :label="0">不推荐</el-radio>
             </el-form-item>
             <el-form-item label="规格类型">
               <el-radio v-model="goods.sku_tag" :label="goods.sku_tag">多规格商品</el-radio>
             </el-form-item>
-            <el-form-item   label="商品规格:" class="postInfo-container-item" required  >
+            <el-form-item label="商品规格:" class="postInfo-container-item" required>
               <el-button type="primary" icon="el-icon-plus" @click="addSkuTag">添加规格</el-button>
               <div>
-                <el-input clearable v-model="goods.sku_tag" placeholder="请填写规格名称" style="width: 200px;margin-top: 10px"></el-input>
+                <el-input clearable v-model="goods.sku_tag" placeholder="请填写规格名称"
+                          style="width: 200px;margin-top: 10px"></el-input>
 
               </div>
               <el-form ref="dynamicValidateForm">
@@ -195,7 +199,7 @@
                     label="图片"
                   >
                     <template slot-scope="scope">
-                        <Upload2 v-model="scope.row.sku_cover_pic" />
+                      <Upload2 v-model="scope.row.sku_cover_pic"/>
                     </template>
                   </el-table-column>
                   <el-table-column
@@ -251,18 +255,18 @@
             <el-form-item label="运费" prop="freight">
               <el-input clearable v-model="goods.freight" placeholder="请输入运费" style="width: 280px"/>
             </el-form-item>
-          <el-form-item label="状态" prop="status">
-            <el-radio v-model="goods.status" :label="2">上架售卖</el-radio>
-            <el-radio v-model="goods.status" :label="1">放置仓库</el-radio>
+            <el-form-item label="状态" prop="status">
+              <el-radio v-model="goods.status" :label="2">上架售卖</el-radio>
+              <el-radio v-model="goods.status" :label="1">放置仓库</el-radio>
             </el-form-item>
 
-        </el-tab-pane>
+          </el-tab-pane>
           <el-tab-pane label="商品详情" name="second">
             <el-form-item label="商品详情" prop="content" required>
-            <Tinymce ref="editor" v-model="goods.content" :height="400"/>
+              <Tinymce v-if="change" v-model="goods.content" :height="400"></Tinymce>
             </el-form-item>
-            </el-tab-pane>
-      </el-tabs>
+          </el-tab-pane>
+        </el-tabs>
       </el-form>
       <div style="text-align:right;margin-top: 50px">
         <el-button type="danger" @click="dialogVisible=false">取消</el-button>
@@ -286,8 +290,6 @@
   } from '../../api/goods'
   import { objectMerge } from '../../utils'
 
-
-
   const defaultGoods = {
     goods_name: '',
     subtitle: '',
@@ -295,14 +297,14 @@
     pic_url: [],
     cid: '',
     sku_tag: '',
-    skus:[],
+    skus: [],
     gold_coins: '',
     freight: 0,
     status: 1,
     content: '',
     is_pick: 0
   }
-  const skus = {sku_name: '',sku_cover_pic: '',left_stock: '',price: '',weight: ''}
+  const skus = { sku_name: '', sku_cover_pic: '', left_stock: '', price: '', weight: '' }
   const goodsFilter = {
     selling: {
       status: 2
@@ -322,7 +324,7 @@
   ]
 
   export default {
-    components: { Pagination, Upload, Tinymce ,Upload2},
+    components: { Pagination, Upload, Tinymce, Upload2 },
     directives: { waves },
     data() {
       return {
@@ -334,10 +336,10 @@
             { required: true, message: '请至少上传一张图片', trigger: 'blur' }
           ],
           gold_coins: [
-            {required: true, message: '请填写赠送金币数量', trigger: 'blur' }
-          ]   ,
+            { required: true, message: '请填写赠送金币数量', trigger: 'blur' }
+          ],
           content: [
-            {required: true, message: '商品详情不能为空', trigger: 'blur' }
+            { required: true, message: '商品详情不能为空', trigger: 'blur' }
           ]
         },
         defaultGoods,
@@ -351,16 +353,18 @@
         category: [],
         categoryList: [],
         dialogVisible: false,
+        change: false,
         dialogType: 'new',
         total: 0,
         new_skus: [],
         listLoading: true,
         listQuery: {
           page: 1,
-          per_page: 20,
+          per_page: 20
         }
       }
     },
+
     created() {
       this.getGoods()
       this.getGoodsCategory()
@@ -375,7 +379,7 @@
         })
       },
       confirmEdit(row) {
-        sortGoods(row.id,{sort:row.sort}).then(res=>{
+        sortGoods(row.id, { sort: row.sort }).then(res => {
           row.edit = false
           row.originalSort = row.sort
           this.$message({
@@ -385,10 +389,11 @@
         })
       },
       isString(val) {
-        return typeof val === 'string' || val instanceof String;
+        return typeof val === 'string' || val instanceof String
       },
       addSkuTag() {
-        this.goods.skus.push(skus)
+        const add = deepClone(skus)
+        this.goods.skus.push(add)
       },
       deleteRow(index, rows) {
         rows.splice(index, 1)
@@ -415,15 +420,23 @@
         this.getGoods()
       },
       handleAddGoods() {
-        this.goods = deepClone(defaultGoods)
-        this.dialogType = 'new'
-        this.dialogVisible = true
+        this.goods =deepClone(defaultGoods)
+        this.change=true
+        this.$nextTick(() => {
+          this.dialogType = 'new'
+          this.dialogVisible = true
+        })
+
       },
       handleEdit(scope) {
-        getGood(scope.row.id).then(res=>{
-          this.goods =res.data
-          this.dialogType = 'edit'
-          this.dialogVisible = true
+        getGood(scope.row.id).then(res => {
+          this.goods = res.data
+          this.$nextTick(() => {
+            this.change=true
+            this.dialogType = 'edit'
+            this.dialogVisible = true
+          })
+
         })
 
       },
@@ -452,29 +465,30 @@
             console.error(err)
           })
       },
+      handleClose(){
+        this.change=false
+      },
       async confirmGoods() {
         const isEdit = this.dialogType === 'edit'
         this.$refs.goodsForm.validate(valid => {
-          if (this.goods.skus.length==0)
-          {
+          if (this.goods.skus.length == 0) {
             this.$message.error('请填写商品规格')
-            return  false
+            return false
           }
           if (valid) {
-            let data=deepClone(this.goods);
-            const skus=data.skus.filter(item=>item.id!==undefined)
-            const new_skus=data.skus.filter(item=>item.id==undefined)
-            data.pic_url=JSON.stringify(data.pic_url)
-            data.skus=JSON.stringify(data.skus)
+            let data = deepClone(this.goods)
+            const skus = data.skus.filter(item => item.id !== undefined)
+            const new_skus = data.skus.filter(item => item.id == undefined)
+            data.pic_url = JSON.stringify(data.pic_url)
+            data.skus = JSON.stringify(data.skus)
             if (isEdit) {
-              let id=data.id
+              let id = data.id
               delete data.type
               delete data.id
-              data.new_skus=JSON.stringify(new_skus)
-              data.skus=JSON.stringify(skus)
-              updateGoods(id,data).then(res => {
-                if (res.code==0)
-                {
+              data.new_skus = JSON.stringify(new_skus)
+              data.skus = JSON.stringify(skus)
+              updateGoods(id, data).then(res => {
+                if (res.code == 0) {
                   this.getGoods()
                   this.dialogVisible = false
                   this.$notify({
@@ -483,14 +497,13 @@
                     type: 'success'
                   })
                 }
-              }).catch(err=>{
+              }).catch(err => {
                 this.$message.error(err.message)
               })
             } else {
               delete data.new_skus
               addGoods(data).then(res => {
-                if (res.code==0)
-                {
+                if (res.code == 0) {
                   this.getGoods()
                   this.dialogVisible = false
                   this.$notify({
@@ -499,16 +512,15 @@
                     type: 'success'
                   })
                 }
-              }).catch(err=>{
+              }).catch(err => {
                 this.$message.error(err.message)
               })
             }
           } else {
-            if (!this.goods.content)
-            {
+            if (!this.goods.content) {
               this.$message.error('商品详情不能为空')
 
-            }else{
+            } else {
               this.$message.error('请按照提示信息输入')
             }
             return false

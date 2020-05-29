@@ -2,61 +2,58 @@
   <div>
     <el-upload
       action=""
+      :show-file-list="true"
       :http-request="upload"
-      list-type="picture-card"
-      :on-preview="handlePictureCardPreview"
-      :file-list="imgList"
-       :on-change="handleChange"
-      :limit="10"
-      :on-remove="handleRemove">
-      <i class="el-icon-plus"></i>
+      :on-success="handleImageSuccess"
+      :on-error="handleImageError"
+      :limit="1"
+       >
+      <el-button size="small" type="primary">点击上传</el-button>
     </el-upload>
-    <el-dialog :visible.sync="dialogVisible">
-      <img width="100%" :src="dialogImageUrl" alt="">
-    </el-dialog>
   </div>
 </template>
 
 <script>
   import { uuid } from '../../utils'
-  const baidubce = require('@baiducloud/bos-uploader')
+  const baidubce = require('@baiducloud/bos-uploader');
   import { getToken } from '../../api/upload'
   export default {
     props: {
       value: ''
     },
-    created() {
-       this.imageUrl()
+    computed: {
+      imageUrl() {
+        return this.value
+      }
     },
     data() {
       return {
-        imgList: [],
-        valueList: [],
-        dialogImageUrl: '',
-        dialogVisible: false
+        dataObj: {},
+        tempUrl: '',
+      }
+    },
+    watch: {
+      value(val) {
+       this.value=val
       }
     },
     methods: {
-      imageUrl() {
-        this.value.forEach((i)=>{
-          this.imgList.push({url:i})
-        })
-        this.valueList=this.value
-      },
       upload(file, detail) {
         getToken().then(response => {
-          this.uploadImage(response.data, file.file)
+          this.dataObj=response.data;
+          this.uploadImage(response.data,file.file)
         })
 
       },
-      uploadImage(param, file) {
+      uploadImage(param,file)
+      {
         let config = {
           credentials: {
             ak: param.accessKeyId,
-            sk: param.secretAccessKey
+            sk: param.secretAccessKey,
           },
           sessionToken: param.sessionToken,
-          endpoint: param.endpoint
+          endpoint: param.endpoint,
         }
         let client = new baidubce.sdk.BosClient(config)
 
@@ -66,7 +63,7 @@
           suffex = suffexs[suffexs.length - 1]
         }
 
-        let key = uuid() + '.' + suffex
+        let key =uuid() + '.' + suffex
         let endpoint = param.endpoint
         let bos_bucket = param.bos_bucket
 
@@ -76,41 +73,31 @@
           client
             .putObject(bos_bucket, key, new Buffer(e.target.result))
             .then((response) => {
-              const url=endpoint + '/' + key
-              this.valueList.push(url)
-              this.emitInput(this.valueList)
+              console.log(response)
+              console.log(endpoint + '/' + key)
+              this.emitInput(endpoint + '/' + key)
             })
             .catch((error) => {
-              this.$message.error('上传失败！')
+              console.log('失败')
+              console.log(error)
             })
         }
       },
       emitInput(val) {
         this.$emit('input', val)
       },
-      handleChange(file)
-      {
-        const image = { name: file.name, url: file.url }
-        this.imgList.push(image)
+      handleImageSuccess(file) {
+        console.log(file)
+        this.emitInput(this.tempUrl)
+        this.value=this.tempUrl
       },
-      handleRemove(file, fileList) {
-        this.imgList = fileList
-        const url=[];
-        fileList.forEach((item)=>{
-          url.push(item.url)
-        })
-        this.valueList=url
-        this.emitInput(url)
+      handleImageError(err, file, fileList) {
+       console.log(err)
       },
-      handlePictureCardPreview(file) {
-        this.dialogImageUrl = file.url
-        this.dialogVisible = true
-      }
     }
   }
 </script>
-<style>
-
+<style  >
   .avatar-uploader .el-upload {
     border: 1px dashed #d9d9d9;
     border-radius: 6px;
@@ -118,11 +105,9 @@
     position: relative;
     overflow: hidden;
   }
-
   .avatar-uploader .el-upload:hover {
     border-color: #409EFF;
   }
-
   .avatar-uploader-icon {
     font-size: 28px;
     color: #8c939d;
@@ -131,7 +116,6 @@
     line-height: 178px;
     text-align: center;
   }
-
   .avatar {
     width: 178px;
     height: 178px;

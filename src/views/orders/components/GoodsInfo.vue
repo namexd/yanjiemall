@@ -11,8 +11,12 @@
           label="商品"
            >
           <template slot-scope="{row}">
-            <img :src="row.goods_cover_pic" alt="">
-            ￥{{row.goods_name}}<br>{{row.sku_name}}
+            <el-image
+              style="width: 60px; height: 60px"
+              :src="row.goods_cover_pic"
+              :preview-src-list="[row.goods_cover_pic]">
+            </el-image>
+            <div style="float: right;margin-right: 25%;"> {{row.goods_name}}<br>{{row.sku_name}} </div>
           </template>
         </el-table-column>
         <el-table-column
@@ -33,9 +37,11 @@
       </el-table>
       <div >
         <ul class="total" >
-          <li>商品总计 {{order.total_price}}</li>
-          <li>运费 {{order.freight}}</li>
-          <li>实付款{{order.actual_price}}</li>
+          <li>商品总计： {{order.total_price}}</li>
+          <li>运费： {{order.freight}}</li>
+          <li v-if="order.pay_type==1||order.pay_type==2">实付款：{{order.actual_price}}</li>
+          <li v-if="order.pay_type==3">实付金币：{{order.actual_price}}</li>
+          <li v-if="order.pay_type==4">实付消费券：{{order.actual_price}}</li>
         </ul>
       </div>
     </div>

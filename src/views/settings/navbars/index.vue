@@ -31,13 +31,13 @@
                 </div>
                 <div class="leftNavText">{{i.name}}</div>
               </el-col>
-
             </el-row>
           </div>
 
         </el-card>
       </el-col>
       <el-col :span="6" :xs="24" :offset="3">
+        <div style="height:700px;overflow-y: auto">
         <div v-for="(item,key) in items">
           <el-card class="box-card">
             <div slot="header" class="clearfix" @click="handleClick(item)">
@@ -95,17 +95,19 @@
             </el-form>
           </el-card>
         </div>
+
         <el-row>
           <el-button style="width: 100% ;border:1px dashed #b4b4b4" @click="handleAddNav"><i class="el-icon-plus">添加</i>{{items.length}}/5
           </el-button>
         </el-row>
+        </div>
       </el-col>
     </el-row>
 
 
     <el-dialog :visible.sync="dialogVisible" title="链接选择器">
       <div style="min-height: 250px;">
-        <el-tabs tab-position="left"  v-model="select.type">
+        <el-tabs tab-position="left" v-model="select.type">
           <el-tab-pane label="商品分类" :name="1">
             <el-table
               :data="options"
@@ -205,8 +207,6 @@
       }
     },
     created() {
-      this.getCategories()
-      this.getGoodModules()
       this.getNav()
     },
     methods: {
@@ -226,36 +226,45 @@
         this.select = row
         this.dialogVisible = true
       },
-       getNav() {
-          getNav().then(res=>{
-            this.place_one_list = res.data.place_one_list
-            this.place_two_list = res.data.place_two_list
-            this.items = this.place_one_list
-            this.displayName()
-          })
+      getNav() {
+        this.getCategories()
+        this.getGoodModules()
+        getNav().then(res => {
+          this.place_one_list = res.data.place_one_list
+          this.place_two_list = res.data.place_two_list
+          this.items = res.data.place_one_list
+          this.showRight(this.items, 1)
+        })
+
       },
       getCategoryName(id) {
         const category = this.options.filter(item => item.id == id)
-        return category[0].name
+        if (category.length > 0) {
+          return category[0].name
+        } else {
+          return ''
+        }
       },
       getLinkName(link) {
         const module = this.options2.filter(item => item.link == link)
-        return module[0].module_name
+        if (module.length > 0) {
+          return module[0].module_name
+        } else {
+          return ''
+        }
       },
-      displayName()
-      {
-        this.items.forEach((value, index, array) => {
-          if (value.id)
-          {
+      displayName(list) {
+        list.forEach((value, index, array) => {
+          if (value.id) {
             if (value.type == 1) {
-              value.display = '商品分类-' +this.getCategoryName(value.goods_cid)
+              value.display = '商品分类-' + this.getCategoryName(value.goods_cid)
             }
             if (value.type == 2) {
-              value.display = '商品链接-' +this.getLinkName(value.link)
+              value.display = '商品链接-' + this.getLinkName(value.link)
             }
           }
-
         })
+        return list
       },
       getCategories() {
         getGoodsCategory({ per_page: 10000 }).then(res => {
@@ -268,9 +277,8 @@
         })
       },
       showRight(list, place) {
-        this.items = list
         this.place = place
-        this.displayName()
+        this.items = this.displayName(list)
       },
 
       handleAddNav() {

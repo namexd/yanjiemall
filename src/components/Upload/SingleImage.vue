@@ -33,6 +33,11 @@
         tempUrl: '',
       }
     },
+    watch: {
+      value(val) {
+        this.value=val
+      }
+    },
     methods: {
       upload(file, detail) {
         getToken().then(response => {

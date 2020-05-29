@@ -3,11 +3,11 @@
     <el-card style="margin-bottom:20px;">
       <div slot="header" class="clearfix">
         <span>会员资料</span>
-        <el-button v-if="user.status==1" @click="handleUserBlock(user.status)" style="float: right;" type="danger"
-                   size="mini">加入黑名单
+        <el-button v-if="user.status==1" @click="handleUserBlock(user.status)" style="float: right;" type="warning"
+                   size="mini">移除黑名单
         </el-button>
         <el-button v-if="user.status==2" @click="handleUserBlock(user.status)" style="float: right;" type="danger"
-                   size="mini">移除黑名单
+                   size="mini">加入黑名单
         </el-button>
       </div>
 

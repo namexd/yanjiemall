@@ -7,12 +7,13 @@
       <el-upload
         :multiple="true"
         :file-list="fileList"
+        :http-request="upload"
         :show-file-list="true"
         :on-remove="handleRemove"
         :on-success="handleSuccess"
         :before-upload="beforeUpload"
         class="editor-slide-upload"
-        action="https://httpbin.org/post"
+        action=" "
         list-type="picture-card"
       >
         <el-button size="small" type="primary">
@@ -31,6 +32,10 @@
 
 <script>
 // import { getToken } from 'api/qiniu'
+const baidubce = require('@baiducloud/bos-uploader');
+
+import { getToken } from '../../../api/upload'
+import { uuid } from '../../../utils'
 
 export default {
   name: 'EditorSlideUpload',
@@ -43,11 +48,63 @@ export default {
   data() {
     return {
       dialogVisible: false,
-      listObj: {},
+      listObj: [],
       fileList: []
     }
   },
   methods: {
+    upload(file, detail) {
+      getToken().then(response => {
+        this.dataObj=response.data;
+        this.uploadImage(response.data,file.file)
+      })
+
+    },
+    uploadImage(param,file)
+    {
+      let config = {
+        credentials: {
+          ak: param.accessKeyId,
+          sk: param.secretAccessKey,
+        },
+        sessionToken: param.sessionToken,
+        endpoint: param.endpoint,
+      }
+      let client = new baidubce.sdk.BosClient(config)
+
+      let suffexs = file.name.split('.')
+      let suffex = ''
+      if (suffexs.length > 0) {
+        suffex = suffexs[suffexs.length - 1]
+      }
+
+      let key =uuid() + '.' + suffex
+      let endpoint = param.endpoint
+      let bos_bucket = param.bos_bucket
+
+      let reader = new FileReader()
+      reader.readAsArrayBuffer(file)
+      reader.onload = (e) => {
+        client
+          .putObject(bos_bucket, key, new Buffer(e.target.result))
+          .then((response) => {
+            const uid = file.uid
+            const objKeyArr = Object.keys(this.listObj)
+            for (let i = 0, len = objKeyArr.length; i < len; i++) {
+              if (this.listObj[objKeyArr[i]].uid === uid) {
+                this.listObj[objKeyArr[i]].url = endpoint + '/' + key
+                this.listObj[objKeyArr[i]].hasSuccess = true
+                return
+              }
+            }
+          })
+          .catch((error) => {
+            console.log('失败')
+            console.log(error)
+          })
+      }
+    },
+
     checkAllSuccess() {
       return Object.keys(this.listObj).every(item => this.listObj[item].hasSuccess)
     },
