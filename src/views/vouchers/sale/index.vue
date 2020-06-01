@@ -14,12 +14,12 @@
       </el-table-column>
       <el-table-column align="header-center" label="未出售数量">
         <template slot-scope="scope">
-          {{ scope.row.kbt_deal_num }}
+          {{ scope.row.kbt_left_num }}
         </template>
       </el-table-column>
       <el-table-column align="header-center" label="未出售价值">
         <template slot-scope="scope">
-          {{ scope.row.kbt_left_num }}
+          {{ (scope.row.kbt_left_num)*(scope.row.kbt_value) }}
         </template>
       </el-table-column>
       <el-table-column align="header-center" label="单价">

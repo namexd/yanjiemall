@@ -16,11 +16,12 @@
 
 <script>
   import { getMenus } from '../../api/menu'
+  import { setMenu,getMenu } from '../../utils/auth'
   export default {
     data() {
       return {
         activeName: this.$route.name,
-        parentMenu:[]
+        parentMenu: getMenus()
       }
     },
     methods: {
@@ -31,9 +32,8 @@
         this.$router.push({ name: this.getName(menu.menu_url), query: { type: menu.id } })
       },
       getMenus(){
-        getMenus({pid:0}).then(res=>{
-          this.parentMenu=res.data
-        })
+        const menus=JSON.parse(getMenu())
+        this.parentMenu=menus
       },
       getName(path)
       {

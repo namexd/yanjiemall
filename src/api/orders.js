@@ -49,3 +49,11 @@ export function expressOrder(id,data) {
     data
   })
 }
+
+
+export function getExpress() {
+  return request({
+    url: '/express',
+    method: 'get',
+  })
+}

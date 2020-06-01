@@ -43,7 +43,7 @@
         <div>
           <el-card>
             <el-form-item label="1金币=" >
-              <el-input v-model="configList.gold_exchange_rate" clearable autocomplete="off" style="width: 20%"></el-input><span class="right">铜币</span>
+              <el-input v-model="configList.gold_to_bean" clearable autocomplete="off" style="width: 20%"></el-input><span class="right">铜币</span>
             </el-form-item>
 
           </el-card>

@@ -1,6 +1,7 @@
 import { login, logout, getInfo } from '@/api/user'
-import { getToken, setToken, removeToken, setUsername } from '@/utils/auth'
+import { getToken, setToken, removeToken, setUsername,setMenu } from '@/utils/auth'
 import router, { resetRouter } from '@/router'
+import { getMenus } from '@/api/menu'
 
 const state = {
   token: getToken(),
@@ -104,6 +105,16 @@ const actions = {
     })
   },
 
+  setMenu({ commit }) {
+    return new Promise(resolve => {
+      getMenus().then(res=>{
+        setMenu(JSON.stringify(res.data))
+        resolve()
+      })
+    }).catch(error => {
+      reject(error)
+    })
+  },
   // remove token
   resetToken({ commit }) {
     return new Promise(resolve => {

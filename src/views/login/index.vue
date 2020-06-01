@@ -150,8 +150,10 @@ export default {
           this.loading = true
           this.$store.dispatch('user/login', this.loginForm)
             .then(() => {
-              this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
-              this.loading = false
+              this.$store.dispatch('user/setMenu').then(()=>{
+                this.$router.push({ path: this.redirect || '/', query: this.otherQuery })
+                this.loading = false
+              })
             })
             .catch(() => {
               this.loading = false

@@ -23,17 +23,8 @@
   import Logo from './Logo'
   import SidebarItem from './SidebarItem'
   import variables from '@/styles/variables.scss'
-  import {
-    goodsRouter,
-    mineralsRouter,
-    ordersRouter,
-    settingsRouter,
-    usersRouter,
-    vouchersRouter,
-    appsRouter
-  } from '../../../router'
   import Layout from '@/layout'
-  import { getMenus } from '../../../api/menu'
+  import { getMenu } from '../../../utils/auth'
 
   const DefaultRoutes = [
     {
@@ -83,9 +74,9 @@
     },
     methods: {
       setNav(val) {
-        getMenus({ pid: val }).then(res => {
-          this.routes = res.data
-        })
+        let menus = JSON.parse(getMenu())
+        let subMenus = menus.filter(item => item.id == parseInt(val))
+        this.routes = subMenus[0].child
       }
     },
     created() {
@@ -94,13 +85,11 @@
     watch: {
       $route: {
         handler: function(val, oldVal) {
-          if (val.query.type)
-          {
+          if (val.query.type) {
             this.setNav(val.query.type)
           }
-          if (val.name=='index')
-          {
-            this.routes=[]
+          if (val.name == 'index') {
+            this.routes = []
           }
         },
         // 深度观察监听

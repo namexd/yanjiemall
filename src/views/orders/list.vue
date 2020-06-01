@@ -154,9 +154,9 @@
             <el-button type="danger" size="mini" @click="handelExpressOrder(scope.row)">
               立即发货
             </el-button>
-<!--            <el-button type="warning" size="mini" @click="closeOrder(scope.row)">-->
-<!--              退款-->
-<!--            </el-button>-->
+            <!--            <el-button type="warning" size="mini" @click="closeOrder(scope.row)">-->
+            <!--              退款-->
+            <!--            </el-button>-->
           </div>
           <div v-if="scope.row.status==3">
             <span>待收货</span><br>
@@ -189,7 +189,13 @@
           {{total_address}}
         </el-form-item>
         <el-form-item label="快递公司" label-width="120px">
-          <el-input v-model="expressForm.express_company" clearable autocomplete="off"></el-input>
+          <el-select v-model="expressForm.express_id">
+            <el-option v-for="item in expressCompany" :key="item.id"
+                       :label="item.express_name"
+                       :value="item.id">
+
+            </el-option>
+          </el-select>
         </el-form-item>
         <el-form-item label="快递单号" label-width="120px">
           <el-input v-model="expressForm.express_no" clearable autocomplete="off"></el-input>
@@ -221,17 +227,17 @@
         <el-col :span="24">
           <el-table
             :data="changeData"
-             >
+          >
             <el-table-column
               label="商品名称"
-              >
+            >
               <template slot-scope="scope">
                 {{ scope.row.goods_name }}-{{scope.row.sku_name}}
               </template>
             </el-table-column>
             <el-table-column
               label="单价"
-              >
+            >
               <template slot-scope="scope">
                 ￥{{ scope.row.price }}
               </template>
@@ -265,12 +271,12 @@
       </el-row>
       <el-row>
         <el-col :span="24">
-         <div style="text-align: right">
-          <p>  实付：改价+运费 </p>
-         <span v-for="p in changeData">￥{{p.modify_price}}+</span>
-           <span>￥{{changePriceParam.freight}}=</span>
-           <span style="color: red">￥{{getTotal()+Number(changePriceParam.freight)}}</span>
-         </div>
+          <div style="text-align: right">
+            <p> 实付：改价+运费 </p>
+            <span v-for="p in changeData">￥{{p.modify_price}}+</span>
+            <span>￥{{changePriceParam.freight}}=</span>
+            <span style="color: red">￥{{getTotal()+Number(changePriceParam.freight)}}</span>
+          </div>
         </el-col>
       </el-row>
       <div slot="footer" class="dialog-footer">
@@ -290,8 +296,7 @@
   import waves from '@/directive/waves' // waves directive
 
   import { objectMerge } from '../../utils'
-  import { closeOrder, expressOrder, getOrderPrice, getOrders, putOrderPrice } from '../../api/orders'
-
+  import { closeOrder, expressOrder, getExpress, getOrderPrice, getOrders, putOrderPrice } from '../../api/orders'
   const ordersFilter = {
     waitPay: {
       status: 1
@@ -342,6 +347,7 @@
     directives: { waves },
     data() {
       return {
+        expressCompany:[],
         OrderTypes,
         ordersFilter,
         PayTypes,
@@ -357,8 +363,8 @@
         timeValue: '',
         total_address: '',
         changePriceParam: {
-          goods:'',
-          freight:0
+          goods: '',
+          freight: 0
         },
         closeParam: {},
         orderList: [],
@@ -379,6 +385,7 @@
     },
     created() {
       this.getOrders()
+      this.getExpresses()
     },
     methods: {
       arraySpanMethod({ row, column, rowIndex, columnIndex }) {
@@ -420,9 +427,9 @@
       changeOrderPrice(id) {
         this.dialogChangePriceVisible = true
         this.changePriceParam.id = id
-        getOrderPrice(id).then(res=>{
-          this.changeData=res.data.goods
-          this.changePriceParam.freight=res.data.freight
+        getOrderPrice(id).then(res => {
+          this.changeData = res.data.goods
+          this.changePriceParam.freight = res.data.freight
         })
       },
       handleDelete({ $index, row }) {
@@ -476,7 +483,7 @@
         const param = deepClone(this.changePriceParam)
         let id = this.changePriceParam.id
         delete param.id
-        param.goods=JSON.stringify(this.changeData)
+        param.goods = JSON.stringify(this.changeData)
         putOrderPrice(id, param).then(res => {
           this.dialogChangePriceVisible = false
           this.$message.success('订单改价成功')
@@ -484,13 +491,19 @@
         })
       },
       getTotal() {
-        let total_change=0
-        this.changeData.forEach((i)=>{
-          total_change+=Number(i.modify_price)
+        let total_change = 0
+        this.changeData.forEach((i) => {
+          total_change += Number(i.modify_price)
         })
         return total_change
+      },
+      getExpresses() {
+        getExpress().then(res=>{
+          this.expressCompany=res.data
+        })
       }
-    }
+    },
+
   }
 </script>
 

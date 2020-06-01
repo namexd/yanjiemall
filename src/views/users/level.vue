@@ -30,7 +30,7 @@
       </el-table-column>
       <el-table-column label="会员数" align="center">
         <template slot-scope="{row}">
-          <span>关闭</span>
+          <span>{{row.total_user}}</span>
         </template>
       </el-table-column>
       <el-table-column label="操作" align="center" class-name="small-padding fixed-width">

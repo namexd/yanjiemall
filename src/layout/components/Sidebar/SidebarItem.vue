@@ -1,6 +1,6 @@
 <template>
   <div v-if="!item.hidden">
-    <template v-if="hasOneShowingChild(item.child,item) && (!onlyOneChild.child||onlyOneChild.noShowingChildren)&&!item.alwaysShow">
+    <template v-if="hasOneShowingChild(item.child,item) && (!onlyOneChild.child||onlyOneChild.noShowingChildren)">
       <app-link v-if="onlyOneChild.menu_url" :to="resolvePath(onlyOneChild.menu_url)">
         <el-menu-item :index="resolvePath(onlyOneChild.menu_url)" :class="{'submenu-title-noDropdown':!isNest}">
           <item icon="" :title="onlyOneChild.menu_name"  />
@@ -10,11 +10,11 @@
 
     <el-submenu v-else ref="subMenu" :index="resolvePath(item.menu_url)" popper-append-to-body>
       <template slot="title">
-        <item v-if="item.meta" :icon="item.meta && item.meta.icon" :title="item.meta.title" />
+        <item v-if="item.menu_name" icon="" :title="item.menu_name" />
       </template>
       <sidebar-item
         v-for="child in item.child"
-        :key="child.menu_url"
+        :key="child.id"
         :is-nest="true"
         :item="child"
         :base-path="resolvePath(child.menu_url)"
@@ -59,8 +59,7 @@ export default {
   methods: {
     hasOneShowingChild(children = [], parent) {
       const showingChildren = children.filter(item => {
-        console.log(item)
-        if (item.hidden) {
+        if (!item.is_menu) {
           return false
         } else {
           // Temp set(will be used if only has one showing child)
