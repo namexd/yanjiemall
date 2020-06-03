@@ -24,7 +24,7 @@
   import SidebarItem from './SidebarItem'
   import variables from '@/styles/variables.scss'
   import Layout from '@/layout'
-  import { getMenu } from '../../../utils/auth'
+  import { getMenu, setSubMenu, getSubMenu } from '../../../utils/auth'
 
   const DefaultRoutes = [
     {
@@ -69,14 +69,17 @@
     },
     data() {
       return {
-        routes: []
+        routes: JSON.parse(getSubMenu()) ?JSON.parse(getSubMenu()): []
       }
     },
     methods: {
       setNav(val) {
-        let menus = JSON.parse(getMenu())
-        let subMenus = menus.filter(item => item.id == parseInt(val))
-        this.routes = subMenus[0].child
+        if (val){
+          let menus = JSON.parse(getMenu())
+          let subMenus = menus.filter(item => item.id == parseInt(val))
+          setSubMenu(JSON.stringify(subMenus[0].child))
+          this.routes = JSON.parse(getSubMenu())
+        }
       }
     },
     created() {

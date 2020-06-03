@@ -3,6 +3,7 @@ import Cookies from 'js-cookie'
 const TokenKey = 'Admin-Token'
 const NameKey = 'Admin-Name'
 const MenuKey = 'adminMenus'
+const SubMenuKey = 'adminSubMenus'
 
 export function getToken() {
   return Cookies.get(TokenKey)
@@ -29,5 +30,12 @@ export function setMenu(menu) {
 }
 export function getMenu() {
   return localStorage.getItem(MenuKey)
+}
+
+export function setSubMenu(menu) {
+  return localStorage.setItem(SubMenuKey,menu)
+}
+export function getSubMenu() {
+  return localStorage.getItem(SubMenuKey)
 }
 

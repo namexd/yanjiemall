@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="4">
           <el-form-item label-width="60px" label="手机号" class="postInfo-container-item">
-            <el-input v-model="listQuery.moble" placeholder="请输入手机号" style="width: 200px;" class="filter-item"
+            <el-input v-model="listQuery.mobile" clearable placeholder="请输入手机号" style="width: 200px;" class="filter-item"
                       @keyup.enter.native="handleFilter"/>
           </el-form-item>
           </el-col>
@@ -41,8 +41,9 @@
           <span>{{ row.id }}</span>
         </template>
       </el-table-column>
-      <el-table-column label="手机号"   align="center">
+      <el-table-column label="手机号"   align="left">
         <template slot-scope="{row}">
+          <div>{{row.true_name}}</div>
           <span>{{ row.mobile}}</span><el-tag  v-if="row.status==1" type="warning">黑名单</el-tag>
         </template>
       </el-table-column>

@@ -5,9 +5,39 @@
     <el-table ref="dragTable" v-loading="listLoading" :data="mineralList" row-key="id" fit highlight-current-row
               style="width: 100%;margin-top:30px;" border>
       <el-table-column align="center" label="权重"  >
-        <template slot-scope="scope">
-          {{ scope.row.sort }}
-        </template>
+          <template slot-scope="{row}">
+            <template v-if="row.edit">
+              <el-input v-model="row.sort" class="edit-input" size="small"/>
+              <el-button
+                class="cancel-btn"
+                size="small"
+                icon="el-icon-refresh"
+                type="text"
+                @click="cancelEdit(row)"
+              >
+                取消
+              </el-button>
+            </template>
+            <span v-else>{{ row.sort }}</span>
+            <el-button
+              v-if="row.edit"
+              type="text"
+              size="small"
+              icon="el-icon-circle-check-outline"
+              @click="confirmEdit(row)"
+            >
+              确定
+            </el-button>
+            <el-button
+              v-else
+              type="text"
+              size="small"
+              icon="el-icon-edit"
+              @click="row.edit=!row.edit"
+            >
+              修改
+            </el-button>
+          </template>
       </el-table-column>
       <el-table-column align="center" label="名称"  >
         <template slot-scope="scope">
@@ -144,7 +174,7 @@
     addMineral,
     updateMineral,
     deleteMineral,
-    getMineral,
+    getMineral, sortProduct
   } from '../../../api/minerals'
   import { deepClone ,parseTime} from '../../../utils'
 
@@ -197,9 +227,14 @@
         this.listLoading = true
 
         const res = await getMinerals(this.listQuery)
-        this.mineralList = res.data.items
+        const items = res.data.items
         this.total = res.data._meta.total_count
         this.listLoading = false
+        this.mineralList = items.map(v => {
+          this.$set(v, 'edit', false)
+          v.originalSort = v.sort
+          return v
+        })
       },
       handleAddMineral() {
         this.mineral = Object.assign({}, defaultMineral)
@@ -254,7 +289,27 @@
         }
         this.getMineral()
         this.dialogVisible = false
-      }
+      },
+      confirmEdit(row) {
+        console.log(111,row)
+        row.edit = false
+        row.originalSort = row.sort
+        sortProduct(row.id, { sort: row.sort }).then(res => {
+           this.$message({
+             message: '权重已修改',
+             type: 'success'
+           })
+        })
+      },
+      cancelEdit(row) {
+        console.log(222,row)
+        row.sort = row.originalSort
+        row.edit = false
+        this.$message({
+          message: '取消修改权重',
+          type: 'warning'
+        })
+      },
     }
   }
 </script>

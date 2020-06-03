@@ -156,7 +156,7 @@
       async getData() {
         const res = await getMineralsStat(this.listQuery)
         this.data = res.data
-        this.list = res.data.mine_data_date.items
+        this.list = res.data.mine_data_date
       }
     }
   }

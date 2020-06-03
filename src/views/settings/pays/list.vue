@@ -39,10 +39,10 @@
           <el-input v-model="pay.title" placeholder="标题"/>
         </el-form-item>
         <el-form-item label="支付类型">
-          <el-radio v-model="pay.type" v-if="dialogType==='edit'" disabled :label="1">支付宝</el-radio>
-          <el-radio v-model="pay.type" v-if="dialogType==='edit'" disabled :label="2">微信</el-radio>
-          <el-radio v-model="pay.type" v-if="dialogType==='new'" :label="1">支付宝</el-radio>
-          <el-radio v-model="pay.type" v-if="dialogType==='new'" :label="2">微信</el-radio>
+          <el-radio v-model="pay.type" v-if="dialogType==='edit'" disabled :label="2">支付宝</el-radio>
+          <el-radio v-model="pay.type" v-if="dialogType==='edit'" disabled :label="1">微信</el-radio>
+          <el-radio v-model="pay.type" v-if="dialogType==='new'" :label="2">支付宝</el-radio>
+          <el-radio v-model="pay.type" v-if="dialogType==='new'" :label="1">微信</el-radio>
         </el-form-item>
         <div v-if="pay.type==1">
           <el-form-item label="公众号appid">

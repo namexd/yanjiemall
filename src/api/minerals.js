@@ -21,6 +21,13 @@ export function getMineral(id) {
   })
 }
 
+export function sortProduct(id,data) {
+  return request({
+    url: `/mine/product/${id}/sort`,
+    method: 'put',
+    data
+  })
+}
 export function updateMineral(id,data) {
   return request({
     url: `/mine/product/${id}`,

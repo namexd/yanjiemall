@@ -4,8 +4,8 @@
       <el-form :model="listQuery" ref="ruleForm">
         <el-row>
           <el-col :span="4">
-            <el-form-item label="订单名称" class="postInfo-container-item">
-              <el-input v-model="listQuery.order_no" placeholder="请输入订单编号" clearable style="width: 200px;"
+            <el-form-item label="订单名称" class="postInfo-container-item" label-width="70px">
+              <el-input v-model="listQuery.order_no" placeholder="请输入" clearable
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
@@ -34,7 +34,7 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="4">
+          <el-col :span="8">
             <el-form-item label="订单类型" class="postInfo-container-item">
               <el-select v-model="listQuery.oder_type" placeholder="请选择" clearable class="filter-item"
                          style="width: 130px">
@@ -43,7 +43,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="8">
             <el-form-item label="支付方式:" class="postInfo-container-item">
               <el-select v-model="listQuery.pay_type" placeholder="请选择" clearable class="filter-item"
                          style="width: 130px">
@@ -52,7 +52,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="8">
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
               搜索
             </el-button>

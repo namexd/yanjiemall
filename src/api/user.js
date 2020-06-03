@@ -8,11 +8,11 @@ export function login(data) {
   })
 }
 
-export function getInfo(token) {
+export function getUserRisk(query) {
   return request({
-    url: '/vue-element-admin/user/info',
+    url: '/risk',
     method: 'get',
-    params: { token }
+    params:query
   })
 }
 export function getUsersIndex() {

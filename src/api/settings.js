@@ -153,6 +153,13 @@ export function updateConfigLevel(data) {
     data
   })
 }
+export function updateConfigPromoter(data) {
+  return request({
+    url: '/config/promoter',
+    method: 'put',
+    data
+  })
+}
 
 export function updateConfigSeat(data) {
   return request({

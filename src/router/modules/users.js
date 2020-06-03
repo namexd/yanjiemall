@@ -32,7 +32,7 @@ const usersRouters = {
     },
     {
       path: 'warning',
-      component: () => import('@/views/table/complex-table'),
+      component: () => import('@/views/users/risk'),
       name: 'usersWarning',
       meta: { title: '风险会员',icon: 'lock' }
     },
