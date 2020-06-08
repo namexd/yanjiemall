@@ -3,18 +3,35 @@
     <div class="filter-container">
       <el-form :model="listQuery">
         <el-row>
-          <el-col :span="4">
+          <el-col :span="5">
             <el-form-item label="账号" class="postInfo-container-item">
               <el-input clearable v-model="listQuery.mobile" placeholder="请输入账号" style="width: 200px;"
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="5">
             <el-form-item label="产品编号" class="postInfo-container-item">
               <el-input clearable v-model="listQuery.mine_no" placeholder="请输入产品编号" style="width: 200px;"
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="选择日期范围:">
+              <el-date-picker
+                v-model="dateRange"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                placeholder="选择日期"
+                @change="getDate"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                format="yyyy-MM-dd HH:mm:ss"
+                align="right"
+                :picker-options="pickerOptions">
+              </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -85,13 +102,54 @@
         listQuery: {
           page: 1,
           per_page: 20
-        }
+        },
+        dateRange:[],
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
       }
     },
     created() {
       this.getFissions()
     },
     methods: {
+      getDate()
+      {
+        if (this.dateRange)
+        {
+          this.listQuery.start_time=this.dateRange[0]
+          this.listQuery.end_time=this.dateRange[1]
+        }else
+        {
+          delete  this.listQuery.start_time
+          delete  this.listQuery.end_time
+        }
+
+      },
       async getFissions() {
         const res = await getFissions(this.listQuery)
         this.fissionsList = res.data.items
@@ -112,15 +170,6 @@
   }
   .child_mine span{
     padding: 0 5px;
-  }
-
-  .bottom_content {
-    position: absolute;
-    z-index: 2;
-    width: 750%;
-    text-align: left;
-    margin-top: 5px;
-    white-space: nowrap;
   }
 </style>
 <style lang="scss" scoped>

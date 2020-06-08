@@ -1,7 +1,7 @@
 <template>
   <div class="app-container">
     <el-row :gutter="20">
-      <el-col :span="4"  :offset="1">
+      <el-col :span="5"  :offset="1">
         <el-card class="box-card">
           <div class="static">
             <div>{{data.total_mine}}</div>
@@ -10,7 +10,7 @@
         </el-card>
 
       </el-col>
-      <el-col :span="4" :offset="3">
+      <el-col :span="5" :offset="1">
         <el-card class="box-card">
           <div class="static">
             <div>{{data.total_fission}}</div>
@@ -20,7 +20,7 @@
         </el-card>
 
       </el-col>
-      <el-col :span="8" :offset="4">
+      <el-col :span="7" :offset="1">
         <el-card class="box-card">
           <div class="static">
             <div>{{data.total_money}}</div>
@@ -30,13 +30,23 @@
         </el-card>
 
       </el-col>
+      <el-col :span="4"  >
+        <el-card class="box-card">
+          <div class="static">
+            <div>{{data.product_name}}</div>
+            <div>申诉中</div>
+
+          </div>
+        </el-card>
+
+      </el-col>
     </el-row>
     <el-row :gutter="20" style="margin-top: 100px">
-      <el-col :span="19" :offset="1">
+      <el-col :span="23" :offset="1">
         <el-card class="box-card">
           <div class="static">
             <div class="filter-container">
-              <el-form :model="listQuery">
+              <el-form>
                 <el-row>
                   <el-col :span="4">
                     <el-form-item >
@@ -46,7 +56,8 @@
                         type="date"
                         placeholder="选择日期"
                         @change="getData"
-                        value-format="yyyy-MM-DD"
+                        value-format="yyyy-MM-dd"
+                        format="yyyy-MM-dd"
                         :picker-options="pickerOptions">
                       </el-date-picker>
                     </el-form-item>
@@ -60,6 +71,16 @@
               <el-table-column align="center" label="挖矿券名称">
                 <template slot-scope="scope">
                   {{ scope.row.product_name }}
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="总数">
+                <template slot-scope="scope">
+                  {{ scope.row.total_mine }}
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="总价值">
+                <template slot-scope="scope">
+                  {{ scope.row.mine_price }}
                 </template>
               </el-table-column>
               <el-table-column align="center" label="分配状态">
@@ -82,12 +103,17 @@
                   {{ scope.row.total_mine }}
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="成功">
+              <el-table-column align="center" label="抢券成功">
                 <template slot-scope="scope">
                   {{ scope.row.panic_success }}
                 </template>
               </el-table-column>
-              <el-table-column align="center" label="失败">
+              <el-table-column align="center" label="交易成功">
+                <template slot-scope="scope">
+                  {{ scope.row.order_success }}
+                </template>
+              </el-table-column>
+              <el-table-column align="center" label="抢券失败">
                 <template slot-scope="scope">
                   {{ scope.row.panic_fail }}
                 </template>
@@ -98,16 +124,7 @@
         </el-card>
 
       </el-col>
-      <el-col :span="4"  >
-        <el-card class="box-card">
-          <div class="static">
-            <div>{{data.product_name}}</div>
-            <div>申诉中</div>
 
-          </div>
-        </el-card>
-
-      </el-col>
     </el-row>
   </div>
 </template>

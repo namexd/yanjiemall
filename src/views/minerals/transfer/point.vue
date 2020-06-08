@@ -1,6 +1,6 @@
 <template>
   <div class="app-container">
-    <back-to-prev path-name="mineralsPoint" detail="指定账号"></back-to-prev>
+    <back-to-prev path-name="mineralsTodaySale" detail="指定账号"></back-to-prev>
     <div class="filter-container">
       <el-form :model="listQuery">
         <el-row>
@@ -93,11 +93,11 @@
       },
       handleAppoint(row) {
         const {
-          id, mobile,
+          mobile,
           product_name,
-          price
+          price,mine_id
         } = this.$route.query
-        const params = { mobile: row.mobile, mine_id: id }
+        const params = { mobile: row.mobile, mine_id: mine_id }
         this.$confirm('确定要把' + mobile + '的' + product_name + '(价值' + price + ')指定给：' + row.mobile + '?', '提示', {
             confirmButtonText: '确定',
             cancelButtonText: '取消',
@@ -122,20 +122,6 @@
   }
 </script>
 
-<style>
-  .rowStyle {
-    height: 100px;
-  }
-
-  .bottom_content {
-    position: absolute;
-    z-index: 2;
-    width: 750%;
-    text-align: left;
-    margin-top: 5px;
-    white-space: nowrap;
-  }
-</style>
 <style lang="scss" scoped>
   .app-container {
     .roles-table {

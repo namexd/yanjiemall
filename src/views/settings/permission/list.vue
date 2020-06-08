@@ -202,7 +202,9 @@
           })
       },
       confirmRule() {
-        let menus = this.$refs.tree.getCheckedKeys()
+        let parent_menu=this.$refs.tree.getHalfCheckedKeys()
+        let sub_menus = this.$refs.tree.getCheckedKeys()
+        let menus=parent_menu.concat(sub_menus)
         updateAdminRules(this.adminId, { menu_rule: menus.join(',') }).then(res => {
           res.code == 0 ? this.$message.success('修改权限成功！') : this.$message.error('修改权限失败！')
           this.dialogVisible2 = false

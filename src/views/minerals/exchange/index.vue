@@ -3,27 +3,46 @@
     <div class="filter-container">
       <el-form :model="listQuery" >
         <el-row>
-          <el-col :span="5">
+          <el-col :span="8">
             <el-form-item label="出售人账号" class="postInfo-container-item">
               <el-input clearable v-model="listQuery.seller_mobile" placeholder="请输入出售人账号" style="width: 200px;" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="8">
             <el-form-item label="买家账号:" class="postInfo-container-item">
               <el-input clearable v-model="listQuery.buyer_mobile" placeholder="请输入买家账号" style="width: 200px;" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="8">
             <el-form-item label="交易状态:" class="postInfo-container-item">
-              <el-select v-model="listQuery.status" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+              <el-select v-model="listQuery.status" placeholder="请选择" clearable class="filter-item"  >
                 <el-option v-for="item in stateTypes" :key="item.key" :label="item.display_name"
                            :value="item.key"/>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+        </el-row>
+          <el-row>
+          <el-col :span="10">
+            <el-form-item label="选择日期范围:">
+              <el-date-picker
+                v-model="dateRange"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                placeholder="选择日期"
+                @change="getDate"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                format="yyyy-MM-dd HH:mm:ss"
+                align="right"
+                :picker-options="pickerOptions">
+              </el-date-picker>
+            </el-form-item>
+          </el-col>
+          <el-col :span="8">
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
               搜索
             </el-button>
@@ -46,7 +65,7 @@
       </el-table-column>
       <el-table-column align="header-center" label="挖矿券名称">
         <template slot-scope="scope">
-          {{scope.row.product_title}}
+          {{scope.row.product_name}}
         </template>
       </el-table-column>
       <el-table-column align="header-center" label="价格">
@@ -132,7 +151,35 @@
         listQuery: {
           page: 1,
           per_page: 20,
-        }
+        },
+        dateRange:[],
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
       }
     },
     created() {
@@ -140,6 +187,19 @@
       this.getMinerals()
     },
     methods: {
+      getDate()
+      {
+        if (this.dateRange)
+        {
+          this.listQuery.start_time=this.dateRange[0]
+          this.listQuery.end_time=this.dateRange[1]
+        }else
+        {
+          delete  this.listQuery.start_time
+          delete  this.listQuery.end_time
+        }
+
+      },
       handleFilter() {
         this.listQuery.page = 1
         this.getExchanges()

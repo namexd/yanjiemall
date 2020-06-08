@@ -24,22 +24,22 @@
               style="width: 100%;margin-top:30px;" row-class-name="rowStyle">
       <el-table-column align="center" label="日志">
         <template slot-scope="scope">
-          {{scope.row.be_mobile}}
+          {{scope.row.type|TypeFilter}}
         </template>
       </el-table-column>
       <el-table-column align="center" label="关联事项">
         <template slot-scope="scope">
-          {{ scope.row.product_name }}
+          {{ scope.row.content }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="操作账号">
         <template slot-scope="scope">
-          {{ scope.row.price }}
+          {{ scope.row.admin_name }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="时间">
         <template slot-scope="scope">
-          {{scope.row.order_state }}
+          {{scope.row.create_at }}
         </template>
       </el-table-column>
     </el-table>
@@ -59,12 +59,21 @@
   } from '../../../api/settings'
 
   const logType = {
-    1: '操作',
-    2: '登陆',
+    1: '挖矿券--申诉处理',
+    2: '挖矿券--添加挖矿券',
+    3: '挖矿券--指定ID',
+    4: '充值金币',
+    5: '充值消费券',
+    6: '修改账号权重',
   }
   export default {
     components: { Pagination },
     directives: { waves },
+    filters:{
+      TypeFilter(type){
+        return logType[type]
+      }
+    },
     data() {
       return {
         logType,
@@ -96,20 +105,6 @@
   }
 </script>
 
-<style>
-  .rowStyle {
-    height: 100px;
-  }
-
-  .bottom_content {
-    position: absolute;
-    z-index: 2;
-    width: 750%;
-    text-align: left;
-    margin-top: 5px;
-    white-space: nowrap;
-  }
-</style>
 <style lang="scss" scoped>
   .app-container {
     .roles-table {

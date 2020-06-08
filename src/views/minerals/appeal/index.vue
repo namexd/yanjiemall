@@ -3,11 +3,28 @@
     <div class="filter-container">
       <el-form :model="listQuery">
         <el-row>
-          <el-col :span="4">
+          <el-col :span="5">
             <el-form-item label="账号" class="postInfo-container-item">
               <el-input clearable v-model="listQuery.mobile" placeholder="请输入预约人账号" style="width: 200px;"
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="10">
+            <el-form-item label="选择日期范围:">
+              <el-date-picker
+                v-model="dateRange"
+                type="datetimerange"
+                range-separator="至"
+                start-placeholder="开始日期"
+                end-placeholder="结束日期"
+                placeholder="选择日期"
+                @change="getDate"
+                value-format="yyyy-MM-dd HH:mm:ss"
+                format="yyyy-MM-dd HH:mm:ss"
+                align="right"
+                :picker-options="pickerOptions">
+              </el-date-picker>
             </el-form-item>
           </el-col>
           <el-col :span="4">
@@ -20,7 +37,7 @@
 
     </div>
     <el-table ref="dragTable" v-loading="listLoading" :data="appealsList" row-key="id" fit highlight-current-row
-              style="width: 100%;margin-top:30px;" row-class-name="rowStyle">
+              style="width: 100%;margin-top:30px;" row-class-name="rowStyle"  :span-method="objectSpanMethod">
       <el-table-column align="center" label="申诉人账号" width="220">
         <template slot-scope="scope">
           <div>
@@ -71,10 +88,16 @@
       </el-table-column>
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
-          <el-button type="primary" size="mini" @click="handleDistribute(scope.row,2)">
-            出售人
-          </el-button>
-          <el-button type="danger" size="small" @click="handleDistribute(scope.row,1)">买家</el-button>
+          <div v-if="scope.row.state==1">
+            <el-button type="primary" size="mini" @click="handleDistribute(scope.row,2)">
+              出售人
+            </el-button>
+            <el-button type="danger" size="small" @click="handleDistribute(scope.row,1)">买家</el-button>
+          </div>
+          <div v-if="scope.row.state==0">
+            申诉已处理： <span v-if="scope.row.point_type==1" style="color: red">买家</span>
+            <span v-if="scope.row.point_type==2" style="color: red">出售人</span>
+          </div>
         </template>
       </el-table-column>
     </el-table>
@@ -84,8 +107,8 @@
 
     <el-dialog title="手动确认挖矿券归属" :visible.sync="dialogFormVisible">
       <el-form :model="distributeParams">
-        <el-form-item   label-width="60px" >
-         请确认已核实完相关凭证，您确定将此券分配给： <span style="color: red">{{title}}</span>
+        <el-form-item label-width="60px">
+          请确认已核实完相关凭证，您确定将此券分配给： <span style="color: red">{{title}}</span>
         </el-form-item>
 
         <el-form-item label="后台登陆密码" label-width="150px">
@@ -145,13 +168,54 @@
         listQuery: {
           page: 1,
           per_page: 20
-        }
+        },
+        dateRange:[],
+        pickerOptions: {
+          shortcuts: [{
+            text: '最近一周',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 7);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近一个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 30);
+              picker.$emit('pick', [start, end]);
+            }
+          }, {
+            text: '最近三个月',
+            onClick(picker) {
+              const end = new Date();
+              const start = new Date();
+              start.setTime(start.getTime() - 3600 * 1000 * 24 * 90);
+              picker.$emit('pick', [start, end]);
+            }
+          }]
+        },
       }
     },
     created() {
       this.getAppeals()
     },
     methods: {
+      getDate()
+      {
+        if (this.dateRange)
+        {
+          this.listQuery.start_time=this.dateRange[0]
+          this.listQuery.end_time=this.dateRange[1]
+        }else
+        {
+          delete  this.listQuery.start_time
+          delete  this.listQuery.end_time
+        }
+
+      },
       handleDistribute(row, type) {
         this.distributeParams.type = type
         this.distributeParams.id = row.id
@@ -177,7 +241,24 @@
       handleFilter() {
         this.listQuery.page = 1
         this.getAppeals()
+      },
+      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
+        console.log(row)
+        if (columnIndex === 7) {
+          if (rowIndex % 2 === 0) {
+            return {
+              rowspan: 2,
+              colspan: 1
+            };
+          } else {
+            return {
+              rowspan: 0,
+              colspan: 0
+            };
+          }
+        }
       }
+
     }
   }
 </script>
@@ -186,17 +267,16 @@
   .rowStyle {
     height: 100px;
   }
-
+</style>
+<style lang="scss" scoped>
   .bottom_content {
     position: absolute;
     z-index: 2;
     width: 750%;
     text-align: left;
-    margin-top: 5px;
+    margin-top: 30px;
     white-space: nowrap;
   }
-</style>
-<style lang="scss" scoped>
   .app-container {
     .roles-table {
       margin-top: 30px;

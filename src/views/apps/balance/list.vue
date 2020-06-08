@@ -22,10 +22,13 @@
     </div>
 
     <el-table ref="dragTable" v-loading="listLoading" :data="balancesList" row-key="id" fit highlight-current-row
-              style="width: 100%;margin-top:30px;" border>
-      <el-table-column align="center" label="提现账号"  >
+              style="width: 100%;margin-top:30px;" >
+      <el-table-column align="left" label="提现账号"  >
         <template slot-scope="scope">
-          {{ scope.row.order_no }}
+          <div style="position: absolute;width: 150%;top: 0">提现单号：{{ scope.row.order_no}}</div>
+          <div style="margin-top: 15px">
+            {{ scope.row.user_mobile }}
+          </div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="等级名称">

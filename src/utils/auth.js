@@ -17,6 +17,16 @@ export function removeToken() {
   return Cookies.remove(TokenKey)
 }
 
+
+export function removeMenus() {
+  return localStorage.removeItem(MenuKey)
+}
+
+
+export function removeSubMenus() {
+  return localStorage.removeItem(SubMenuKey)
+}
+
 export function getUsername() {
   return Cookies.get(NameKey)
 }

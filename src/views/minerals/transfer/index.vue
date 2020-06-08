@@ -125,6 +125,7 @@
         this.$router.push({
           name: 'mineralsPoint', query: {
             id: row.product_id,
+            mine_id: row.mine_id,
             mobile: row.mobile,
             product_name: row.product_name,
             price: row.price

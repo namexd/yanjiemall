@@ -10,6 +10,12 @@
           </el-form-item>
           </el-col>
           <el-col :span="4">
+          <el-form-item label-width="60px" label="姓名" class="postInfo-container-item">
+            <el-input v-model="listQuery.user_name" clearable placeholder="请输入姓名" style="width: 200px;" class="filter-item"
+                      @keyup.enter.native="handleFilter"/>
+          </el-form-item>
+          </el-col>
+          <el-col :span="4">
           <el-form-item label-width="60px" label="黑名单:" class="postInfo-container-item">
             <el-select v-model="listQuery.status" placeholder="请选择" clearable class="filter-item" style="width: 130px">
               <el-option v-for="item in userStatusOptions" :key="item.key" :label="item.display_name"
