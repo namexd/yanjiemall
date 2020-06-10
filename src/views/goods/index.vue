@@ -4,23 +4,23 @@
     <div class="filter-container">
       <el-form :model="listQuery">
         <el-row>
-          <el-col :span="4">
+          <el-col :span="6">
             <el-form-item label="商品名称" class="postInfo-container-item">
-              <el-input v-model="listQuery.goods_name" placeholder="请输入商品名称" style="width: 200px;" class="filter-item"
+              <el-input v-model="listQuery.goods_name" placeholder="请输入商品名称" style="width: 50%;" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="6">
             <el-form-item label="商品分类:" class="postInfo-container-item">
-              <el-select v-model="listQuery.cid" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+              <el-select v-model="listQuery.cid" placeholder="请选择" clearable class="filter-item" style="width: 50%;" >
                 <el-option v-for="item in categoryList" :key="item.id" :label="item.name"
                            :value="item.id"/>
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="6">
             <el-form-item label="商品类型:" class="postInfo-container-item">
-              <el-select v-model="listQuery.type" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+              <el-select v-model="listQuery.type" placeholder="请选择" clearable class="filter-item" style="width: 50%;" >
                 <el-option v-for="item in GoodsTypes" :key="item.key" :label="item.display_name"
                            :value="item.key"/>
               </el-select>
@@ -252,6 +252,9 @@
             <el-form-item label="赠送金币" prop="gold_coins" v-if="goods.type==1" required>
               <el-input clearable v-model="goods.gold_coins" placeholder="请输入数量" style="width: 280px"/>
             </el-form-item>
+            <el-form-item label="虚拟销量" >
+              <el-input clearable v-model="goods.invent_sales" placeholder="请输入数量" style="width: 280px"/> 虚拟销量不计入商品数据统计
+            </el-form-item>
             <el-form-item label="运费" prop="freight">
               <el-input clearable v-model="goods.freight" placeholder="请输入运费" style="width: 280px"/>
             </el-form-item>
@@ -307,13 +310,13 @@
   const skus = { sku_name: '', sku_cover_pic: '', left_stock: '', price: '', weight: '' }
   const goodsFilter = {
     selling: {
-      status: 2
+      goods_type: 3
     },
     selled: {
-      is_sold: 2
+      goods_type: 1
     },
     repertory: {
-      status: 1
+      goods_type: 2
     }
   }
 

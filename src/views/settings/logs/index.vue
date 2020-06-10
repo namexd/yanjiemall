@@ -3,9 +3,9 @@
     <div class="filter-container">
       <el-form :model="listQuery">
         <el-row>
-          <el-col :span="4">
+          <el-col :span="6">
             <el-form-item label="日志类型" class="postInfo-container-item">
-              <el-select v-model="listQuery.type" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+              <el-select v-model="listQuery.type" placeholder="请选择" clearable class="filter-item" style="width: 50%">
                 <el-option v-for="(item,index) in logType" :key="index" :label="item"
                            :value="index"/>
               </el-select>

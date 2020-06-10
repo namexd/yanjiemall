@@ -3,9 +3,10 @@
     <div class="filter-container">
       <el-form :model="listQuery">
         <el-row>
-          <el-col :span="4">
+          <el-col :span="5">
             <el-form-item label="状态:" class="postInfo-container-item">
               <el-date-picker
+                style="width: 50%"
                 v-model="listQuery.order_date"
                 type="date"
                 value-format="yyyy-MM-dd"

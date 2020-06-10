@@ -5,14 +5,14 @@
         <el-row>
           <el-col :span="5">
             <el-form-item label="账号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.mobile" placeholder="请输入账号" style="width: 200px;"
+              <el-input clearable v-model="listQuery.mobile" placeholder="请输入账号" style="width: 50%"
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
           <el-col :span="5">
             <el-form-item label="产品编号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.mine_no" placeholder="请输入产品编号" style="width: 200px;"
+              <el-input clearable v-model="listQuery.mine_no" placeholder="请输入产品编号" style="width: 50%"
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
@@ -20,6 +20,7 @@
           <el-col :span="10">
             <el-form-item label="选择日期范围:">
               <el-date-picker
+                style="width: 50%"
                 v-model="dateRange"
                 type="datetimerange"
                 range-separator="至"

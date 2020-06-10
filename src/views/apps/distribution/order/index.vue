@@ -5,14 +5,14 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="分销订单编号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.order_no" placeholder="分销订单编号" style="width: 200px;"
+              <el-input clearable v-model="listQuery.order_no" placeholder="分销订单编号" style="width: 50%"
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
           <el-col :span="6">
             <el-form-item label="买家信息" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.mobile" placeholder="手机号" style="width: 200px;"
+              <el-input clearable v-model="listQuery.mobile" placeholder="手机号" style="width: 50%"
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
@@ -20,6 +20,7 @@
           <el-col :span="6">
             <el-form-item label="下单时间" class="postInfo-container-item">
               <el-date-picker
+                style="width: 50%"
                 v-model="listQuery.seller_confirm_at"
                 type="date"
                 placeholder="选择日期">

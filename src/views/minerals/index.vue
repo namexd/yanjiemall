@@ -4,7 +4,7 @@
       <el-col :span="5"  :offset="1">
         <el-card class="box-card">
           <div class="static">
-            <div>{{data.total_mine}}</div>
+            <div><b>{{data.total_mine}}</b></div>
             <div>挖矿券总数</div>
           </div>
         </el-card>
@@ -13,7 +13,7 @@
       <el-col :span="5" :offset="1">
         <el-card class="box-card">
           <div class="static">
-            <div>{{data.total_fission}}</div>
+            <div><b>{{data.total_fission}}</b></div>
             <div>裂变数</div>
 
           </div>
@@ -23,7 +23,7 @@
       <el-col :span="7" :offset="1">
         <el-card class="box-card">
           <div class="static">
-            <div>{{data.total_money}}</div>
+            <div><b>{{data.total_money}}</b></div>
             <div>挖矿券价值</div>
 
           </div>
@@ -33,7 +33,7 @@
       <el-col :span="4"  >
         <el-card class="box-card">
           <div class="static">
-            <div>{{data.product_name}}</div>
+            <div><b>{{data.product_name}}</b></div>
             <div>申诉中</div>
 
           </div>
@@ -100,7 +100,7 @@
               </el-table-column>
               <el-table-column align="center" label="券数量">
                 <template slot-scope="scope">
-                  {{ scope.row.total_mine }}
+                  {{ scope.row.total_cir_mine }}
                 </template>
               </el-table-column>
               <el-table-column align="center" label="抢券成功">
@@ -118,6 +118,13 @@
                   {{ scope.row.panic_fail }}
                 </template>
               </el-table-column>
+              <el-table-column align="center" label="操作">
+                <template slot-scope="scope">
+                  <el-button  type="danger" v-if="scope.row.can_panic==1" @click="panic(scope.row)">分配</el-button>
+                  <el-button  type="info"   v-if="scope.row.can_panic==0&&scope.row.status==3"  >已结束</el-button>
+                  <el-button      v-if="scope.row.can_panic==0&&scope.row.status==1"  >未开始</el-button>
+                </template>
+              </el-table-column>
             </el-table>
 
           </div>
@@ -130,7 +137,7 @@
 </template>
 
 <script>
-  import { getMineralsStat } from '../../api/minerals'
+  import { getMineralsStat, productPanic } from '../../api/minerals'
 
   const statusOptions = {
     1: '未开始', 2: '分配中', 3: '已结束'
@@ -170,6 +177,13 @@
       this.getData()
     },
     methods: {
+      panic(row)
+      {
+        productPanic(row.product_id).then(res=>{
+          res.code==0?this.$message.success('分配成功'):this.$message.error('分配失败')
+          this.getData()
+        })
+      },
       async getData() {
         const res = await getMineralsStat(this.listQuery)
         this.data = res.data
@@ -186,7 +200,7 @@
     text-align: center;
   }
 
-  .static span {
+  .static b {
     color: #20a0ff;
   }
 </style>

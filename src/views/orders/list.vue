@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="4">
             <el-form-item label="订单名称" class="postInfo-container-item" label-width="70px">
-              <el-input v-model="listQuery.order_no" placeholder="请输入" clearable
+              <el-input v-model="listQuery.order_no" placeholder="请输入订单名称/编号" clearable
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>

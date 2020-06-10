@@ -5,13 +5,13 @@
         <el-row>
           <el-col :span="4">
             <el-form-item label="关键词" class="postInfo-container-item">
-              <el-input v-model="listQuery.mobile" placeholder="请输入关键词" style="width: 200px;" class="filter-item"
+              <el-input v-model="listQuery.mobile" placeholder="请输入关键词" style="width: 50%" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
           <el-col :span="4">
             <el-form-item label="分销等级:" class="postInfo-container-item">
-              <el-select v-model="listQuery.level" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+              <el-select v-model="listQuery.level" placeholder="请选择" clearable class="filter-item" style="width: 50%">
                 <el-option v-for="item in levelList" :key="item.id" :label="item.level_name"
                            :value="item.id"/>
               </el-select>

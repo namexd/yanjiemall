@@ -15,17 +15,21 @@
             <span>{{order.user_mobile}}</span>
           </div>
           <div class="progress-item">
-            <b>卖家电话</b>
+            <b>收货人姓名</b>
+            <span>{{order.address_name}}</span>
+          </div>
+          <div class="progress-item">
+            <b>收货人电话</b>
             <span>{{order.address_mobile}}</span>
           </div>
           <div class="progress-item">
             <b>收货地址</b>
-            <span>{{order.id}}</span>
+            <span>{{order.total_address}}</span>
           </div>
-          <div class="progress-item">
-            <b>留言</b>
-            <span> </span>
-          </div>
+<!--          <div class="progress-item">-->
+<!--            <b>留言</b>-->
+<!--            <span> </span>-->
+<!--          </div>-->
         </div>
       </div>
     </div>

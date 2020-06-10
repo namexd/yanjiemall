@@ -3,30 +3,34 @@
     <div class="filter-container">
       <el-form :model="listQuery">
         <el-row>
-          <el-col :span="5">
+          <el-col :span="6">
             <el-form-item label="账号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.mobile" placeholder="请输入预约人账号" style="width: 200px;"
+              <el-select v-model="listQuery.type" placeholder="请选择账号" clearable class="filter-item" style="width: 130px">
+                <el-option v-for="(item,index) in typeList" :key="index" :label="item"
+                           :value="index"/>
+              </el-select>
+              <el-input clearable v-model="listQuery.mobile" placeholder="请输入账号" style="width: 200px;"
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
-          <el-col :span="10">
-            <el-form-item label="选择日期范围:">
-              <el-date-picker
-                v-model="dateRange"
-                type="datetimerange"
-                range-separator="至"
-                start-placeholder="开始日期"
-                end-placeholder="结束日期"
-                placeholder="选择日期"
-                @change="getDate"
-                value-format="yyyy-MM-dd HH:mm:ss"
-                format="yyyy-MM-dd HH:mm:ss"
-                align="right"
-                :picker-options="pickerOptions">
-              </el-date-picker>
-            </el-form-item>
-          </el-col>
+<!--          <el-col :span="10">-->
+<!--            <el-form-item label="选择日期范围:">-->
+<!--              <el-date-picker-->
+<!--                v-model="dateRange"-->
+<!--                type="datetimerange"-->
+<!--                range-separator="至"-->
+<!--                start-placeholder="开始日期"-->
+<!--                end-placeholder="结束日期"-->
+<!--                placeholder="选择日期"-->
+<!--                @change="getDate"-->
+<!--                value-format="yyyy-MM-dd HH:mm:ss"-->
+<!--                format="yyyy-MM-dd HH:mm:ss"-->
+<!--                align="right"-->
+<!--                :picker-options="pickerOptions">-->
+<!--              </el-date-picker>-->
+<!--            </el-form-item>-->
+<!--          </el-col>-->
           <el-col :span="4">
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
               搜索
@@ -37,19 +41,53 @@
 
     </div>
     <el-table ref="dragTable" v-loading="listLoading" :data="appealsList" row-key="id" fit highlight-current-row
-              style="width: 100%;margin-top:30px;" row-class-name="rowStyle"  :span-method="objectSpanMethod">
-      <el-table-column align="center" label="申诉人账号" width="220">
+              style="width: 100%;margin-top:30px;" row-class-name="rowStyle" >
+      <el-table-column align="center" label="申诉信息" width="220">
         <template slot-scope="scope">
           <div>
-            {{ scope.row.mobile }}
-            <div class="bottom_content"><span>订单编号：{{scope.row.mine_no}}</span> <span style="color: red">内容：{{scope.row.explain}}</span>
+            <div style="text-align: left" class="dubble" >出售人：{{scope.row.seller_appeals.mobile}}  <el-tag v-if="scope.row.seller_appeals.create_at" size="mini" type="warning">申诉</el-tag></div>
+            <div style="text-align: left" class="dubble">买家：{{scope.row.buyer_appeals.mobile}}  <el-tag v-if="scope.row.buyer_appeals.create_at"   size="mini" type="warning">申诉</el-tag></div>
+            <div class="bottom_content"><span>订单编号：{{scope.row.order_no}}</span><span>挖矿券编号：{{scope.row.mine_no}}</span>
             </div>
           </div>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="被申诉人账号">
+      <el-table-column align="center" label="申诉时间">
         <template slot-scope="scope">
-          {{scope.row.be_mobile}}
+          <div class="dubble">{{ scope.row.seller_appeals.create_at }}</div>
+          <div class="dubble">{{scope.row.buyer_appeals.create_at}}</div>
+        </template>
+      </el-table-column>
+      <el-table-column align="center" label="付款凭证">
+        <template slot-scope="scope">
+          <div class="dubble">
+          <div class="demo-image__preview ">
+            <el-image
+              lazy
+              style="width: 30px; height: 30px"
+              :src=" scope.row.seller_appeals.explain_img"
+              :preview-src-list="[scope.row.seller_appeals.explain_img]">
+            </el-image>
+          </div>
+          </div>
+          <div class="dubble">
+
+          <div class="demo-image__preview dubble" v-if="scope.row.buyer_appeals.create_at">
+            <el-image
+                       lazy
+                       style="width: 30px; height: 30px"
+                       :src=" scope.row.buyer_appeals.explain_img"
+                       :preview-src-list="[scope.row.buyer_appeals.explain_img]">
+            </el-image>
+          </div>
+          </div>
+        </template>
+      </el-table-column>
+
+      <el-table-column align="center" label="申诉内容">
+        <template slot-scope="scope">
+          <div class="dubble" style="color: red">{{scope.row.seller_appeals.explain}}</div>
+          <div class="dubble" style="color: red">{{scope.row.buyer_appeals.explain}}</div>
         </template>
       </el-table-column>
       <el-table-column align="center" label="挖矿券名称">
@@ -69,23 +107,8 @@
           </el-tag>
         </template>
       </el-table-column>
-      <el-table-column align="center" label="付款凭证">
-        <template slot-scope="scope">
-          <div class="demo-image__preview">
-            <el-image
-              lazy
-              style="width: 100px; height: 100px"
-              :src=" scope.row.explain_img"
-              :preview-src-list="[scope.row.explain_img]">
-            </el-image>
-          </div>
-        </template>
-      </el-table-column>
-      <el-table-column align="center" label="申诉时间">
-        <template slot-scope="scope">
-          {{ scope.row.create_at }}
-        </template>
-      </el-table-column>
+
+
       <el-table-column align="center" label="操作">
         <template slot-scope="scope">
           <div v-if="scope.row.state==1">
@@ -97,6 +120,7 @@
           <div v-if="scope.row.state==0">
             申诉已处理： <span v-if="scope.row.point_type==1" style="color: red">买家</span>
             <span v-if="scope.row.point_type==2" style="color: red">出售人</span>
+            <span v-if="scope.row.point_type==0" style="color: red">--</span>
           </div>
         </template>
       </el-table-column>
@@ -139,6 +163,10 @@
     3: '已完成',
     4: '已关闭'
   }
+  const typeList = {
+    1: '买家',
+    2: '出售人',
+  }
   export default {
     components: { Pagination },
     directives: { waves },
@@ -157,6 +185,7 @@
     },
     data() {
       return {
+        typeList,
         appealsList: [],
         dialogFormVisible: false,
         title: '',
@@ -167,7 +196,7 @@
         },
         listQuery: {
           page: 1,
-          per_page: 20
+          per_page: 20,
         },
         dateRange:[],
         pickerOptions: {
@@ -242,22 +271,6 @@
         this.listQuery.page = 1
         this.getAppeals()
       },
-      objectSpanMethod({ row, column, rowIndex, columnIndex }) {
-        console.log(row)
-        if (columnIndex === 7) {
-          if (rowIndex % 2 === 0) {
-            return {
-              rowspan: 2,
-              colspan: 1
-            };
-          } else {
-            return {
-              rowspan: 0,
-              colspan: 0
-            };
-          }
-        }
-      }
 
     }
   }
@@ -269,12 +282,15 @@
   }
 </style>
 <style lang="scss" scoped>
+  .dubble{
+    height: 30px;
+  }
   .bottom_content {
     position: absolute;
     z-index: 2;
     width: 750%;
     text-align: left;
-    margin-top: 30px;
+    bottom: 5px;
     white-space: nowrap;
   }
   .app-container {

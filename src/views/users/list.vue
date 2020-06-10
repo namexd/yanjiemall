@@ -3,27 +3,27 @@
     <div class="filter-container">
       <el-form :model="listQuery">
         <el-row>
-          <el-col :span="4">
+          <el-col :span="6">
           <el-form-item label-width="60px" label="手机号" class="postInfo-container-item">
-            <el-input v-model="listQuery.mobile" clearable placeholder="请输入手机号" style="width: 200px;" class="filter-item"
+            <el-input v-model="listQuery.mobile" clearable placeholder="请输入手机号" style="width: 50%" class="filter-item"
                       @keyup.enter.native="handleFilter"/>
           </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="6">
           <el-form-item label-width="60px" label="姓名" class="postInfo-container-item">
-            <el-input v-model="listQuery.user_name" clearable placeholder="请输入姓名" style="width: 200px;" class="filter-item"
+            <el-input v-model="listQuery.user_name" clearable placeholder="请输入姓名" style="width: 50%" class="filter-item"
                       @keyup.enter.native="handleFilter"/>
           </el-form-item>
           </el-col>
-          <el-col :span="4">
+          <el-col :span="6">
           <el-form-item label-width="60px" label="黑名单:" class="postInfo-container-item">
-            <el-select v-model="listQuery.status" placeholder="请选择" clearable class="filter-item" style="width: 130px">
+            <el-select v-model="listQuery.status" placeholder="请选择" clearable class="filter-item" style="width: 50%">
               <el-option v-for="item in userStatusOptions" :key="item.key" :label="item.display_name"
                          :value="item.key"/>
             </el-select>
           </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="2">
           <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
             搜索
           </el-button>

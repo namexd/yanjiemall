@@ -50,6 +50,24 @@
         </div>
       </el-col>
     </el-row>
+      <el-row>
+      <el-col :span="20" :offset="2">
+        <div>
+          <el-card>
+            <div slot="header" class="clearfix">
+              <span>育成奖</span>
+            </div>
+            <el-form-item  >
+              <el-radio v-model="configList.grown_promote_fee_status" :label="1">开启</el-radio>
+              <el-radio v-model="configList.grown_promote_fee_status" :label="0">关闭</el-radio>
+            </el-form-item>
+            <el-form-item   v-if="configList.grown_promote_fee_status==1">
+              <el-input v-model="configList.grown_promote_fee"  placeholder="请输入提成数" style="width: 20%"></el-input><span class="right">%</span>
+            </el-form-item>
+          </el-card>
+        </div>
+      </el-col>
+    </el-row>
 
     </el-form>
     <div   class="footer">
@@ -64,7 +82,8 @@
   export default {
     data() {
       return {
-        configList:[]
+        configList:[],
+        radio:1
       }
     },
     created() {

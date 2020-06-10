@@ -66,6 +66,12 @@ export function appealDistribute(id,data) {
     data
   })
 }
+export function productPanic(id) {
+  return request({
+    url: `/mine/product/${id}/panic`,
+    method: 'post',
+  })
+}
 
 export function getAppoints(query) {
   return request({

@@ -3,7 +3,7 @@
     <div class="filter-container">
       <el-form :model="listQuery" >
         <el-row>
-          <el-col :span="4" style="text-align: right">
+          <el-col :span="6" style="text-align: right">
             <el-form-item  class="postInfo-container-item">
               <el-select v-model="searchQuery.key" placeholder="请选择账号类型" clearable class="filter-item" style="width: 150px">
                 <el-option v-for="item in TypeOption" :key="item.key" :label="item.display_name"
@@ -12,7 +12,7 @@
             </el-form-item>
 
           </el-col>
-          <el-col :span=4 >
+          <el-col :span=6 >
             <el-form-item  class="postInfo-container-item">
               <el-input clearable v-model="searchQuery.value" placeholder="请输入账号" style="width: 200px;" class="filter-item"
                         @keyup.enter.native="handleFilter"/>

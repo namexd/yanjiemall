@@ -5,7 +5,7 @@
         <el-row>
           <el-col :span="5">
             <el-form-item label="出售人账号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.mobile" placeholder="出售人账号" style="width: 200px;"
+              <el-input clearable v-model="listQuery.mobile" placeholder="出售人账号" style="width: 50%"
                         class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
@@ -13,7 +13,7 @@
           <el-col :span="4">
             <el-form-item label="挖矿券:" class="postInfo-container-item">
               <el-select v-model="listQuery.product_id" placeholder="请选择" clearable class="filter-item"
-                         style="width: 130px">
+                         style="width: 50%">
                 <el-option v-for="item in productList" :key="item.id" :label="item.product_title"
                            :value="item.id"/>
               </el-select>

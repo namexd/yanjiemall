@@ -5,19 +5,19 @@
         <el-row>
           <el-col :span="8">
             <el-form-item label="出售人账号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.seller_mobile" placeholder="请输入出售人账号" style="width: 200px;" class="filter-item"
+              <el-input clearable v-model="listQuery.seller_mobile" placeholder="请输入出售人账号" style="width: 50%" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="买家账号:" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.buyer_mobile" placeholder="请输入买家账号" style="width: 200px;" class="filter-item"
+              <el-input clearable v-model="listQuery.buyer_mobile" placeholder="请输入买家账号" style="width: 50%" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="交易状态:" class="postInfo-container-item">
-              <el-select v-model="listQuery.status" placeholder="请选择" clearable class="filter-item"  >
+              <el-select v-model="listQuery.status" placeholder="请选择" clearable class="filter-item"  style="width: 50%">
                 <el-option v-for="item in stateTypes" :key="item.key" :label="item.display_name"
                            :value="item.key"/>
               </el-select>
@@ -28,6 +28,7 @@
           <el-col :span="10">
             <el-form-item label="选择日期范围:">
               <el-date-picker
+                style="width: 50%"
                 v-model="dateRange"
                 type="datetimerange"
                 range-separator="至"

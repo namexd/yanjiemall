@@ -5,13 +5,13 @@
         <el-row>
           <el-col :span="6">
             <el-form-item label="预约人账号" class="postInfo-container-item">
-              <el-input clearable v-model="listQuery.mobile" placeholder="请输入预约人账号" style="width: 200px;" class="filter-item"
+              <el-input clearable v-model="listQuery.mobile" placeholder="请输入预约人账号" style="width: 50%" class="filter-item"
                         @keyup.enter.native="handleFilter"/>
             </el-form-item>
           </el-col>
           <el-col :span="8">
             <el-form-item label="挖矿券:" class="postInfo-container-item">
-              <el-select v-model="listQuery.product_id" placeholder="请选择" clearable class="filter-item"  >
+              <el-select v-model="listQuery.product_id" placeholder="请选择" clearable class="filter-item" style="width: 50%" >
                 <el-option v-for="item in productList" :key="item.id" :label="item.product_title"
                            :value="item.id"/>
               </el-select>
@@ -19,7 +19,7 @@
           </el-col>
           <el-col :span="8">
             <el-form-item label="状态:" class="postInfo-container-item">
-              <el-select v-model="listQuery.state" placeholder="请选择" clearable class="filter-item" >
+              <el-select v-model="listQuery.state" placeholder="请选择" clearable class="filter-item" style="width: 50%">
                 <el-option v-for="item in stateTypes" :key="item.key" :label="item.display_name"
                            :value="item.key"/>
               </el-select>
@@ -29,7 +29,7 @@
         <el-row>
           <el-col :span="5">
             <el-form-item label="类型:" class="postInfo-container-item">
-              <el-select v-model="listQuery.type" placeholder="请选择" clearable class="filter-item"  >
+              <el-select v-model="listQuery.type" placeholder="请选择" clearable class="filter-item"  style="width: 50%">
                 <el-option v-for="item in appointTypes" :key="item.key" :label="item.display_name"
                            :value="item.key"/>
               </el-select>
@@ -38,6 +38,7 @@
           <el-col :span="10">
             <el-form-item label="选择日期范围:">
               <el-date-picker
+                style="width: 50%"
                 v-model="dateRange"
                 type="datetimerange"
                 range-separator="至"
