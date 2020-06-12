@@ -25,6 +25,14 @@
           </el-col>
         </el-row>
           <el-row>
+            <el-col :span="6">
+              <el-form-item label="挖矿券名称:" class="postInfo-container-item">
+                <el-select v-model="listQuery.product_id" placeholder="请选择" clearable class="filter-item"  style="width: 50%">
+                  <el-option v-for="item in productList" :key="item.id" :label="item.product_title"
+                             :value="item.id"/>
+                </el-select>
+              </el-form-item>
+            </el-col>
           <el-col :span="10">
             <el-form-item label="选择日期范围:">
               <el-date-picker
@@ -56,11 +64,13 @@
               style="width: 100%;margin-top:30px;" border>
       <el-table-column align="center" label="出售人账号" width="220">
         <template slot-scope="scope">
+          {{ scope.row.seller_name }} <br>
           {{ scope.row.seller_mobile }}
         </template>
       </el-table-column>
       <el-table-column align="center" label="买家账号" width="220">
         <template slot-scope="scope">
+          {{ scope.row.buyer_name }} <br>
           {{ scope.row.mobile }}
         </template>
       </el-table-column>

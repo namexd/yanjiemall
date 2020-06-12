@@ -192,12 +192,12 @@
   import { getMinerals } from '../../../../api/minerals'
 
   const stateTypes = [
-    { key: 1, display_name: '待转让' },
-    { key: 2, display_name: '转让中' },
-    { key: 3, display_name: '转让中(待付款)' },
-    { key: 4, display_name: '转让中(待确认)' },
-    { key: 5, display_name: '已完成' },
-    { key: 6, display_name: '待转让(已退回)' },
+    { key: 1, display_name: '挖矿中' },
+    { key: 2, display_name: '待转让' },
+    { key: 3, display_name: '转让中' },
+    { key: 4, display_name: '已完成' },
+    { key: 5, display_name: '已转出' },
+    { key: 6, display_name: '已裂变' },
   ]
 
   const stateTypeKeyValue = stateTypes.reduce((acc, cur) => {

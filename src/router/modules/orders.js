@@ -17,55 +17,46 @@ const ordersRouters = {
       meta: { title: '订单概览',icon: 'order_unread' }
     },
     {
-      path: 'list',
-      component: () => import('@/views/orders/list'),
-      name: 'orderList',
-      meta: { title: '订单管理',icon: '订单' },
-      children:[
-        {
-          path: 'all',
-          component: () => import('@/views/orders/list'),
-          name: 'orderAll',
-          meta: { title: '全部订单',icon: 'list' }
-        },
-        {
-          path: 'waitPay',
-          component: () => import('@/views/orders/list'),
-          name: 'waitPay',
-          meta: { title: '待付款',icon: '待付款' }
-        },
-        {
-          path: 'waitSend',
-          component: () => import('@/views/orders/list'),
-          name: 'waitSend',
-          meta: { title: '待发货',icon: '待发货' }
-        },
-        {
-          path: 'waitConfirm',
-          component: () => import('@/views/orders/list'),
-          name: 'waitConfirm',
-          meta: { title: '待收货',icon: '待收货' }
-        },
-        {
-          path: 'confirmed',
-          component: () => import('@/views/orders/list'),
-          name: 'confirmed',
-          meta: { title: '已完成',icon: 'check surface' }
-        },
-        {
-          path: 'closed',
-          component: () => import('@/views/orders/list'),
-          name: 'closed',
-          meta: { title: '已关闭',icon: 'close' }
-        },
-        {
-          path: 'refund',
-          component: () => import('@/views/orders/list'),
-          name: 'refund',
-          meta: { title: '已退款',icon: '退款' }
-        },
-
-      ]
+      path: 'list/all',
+      component: () => import('@/views/orders/list/all'),
+      name: 'orderAll',
+      meta: { title: '全部订单',icon: 'list',keepAlive:true }
+    },
+    {
+      path: 'list/waitPay',
+      component: () => import('@/views/orders/list/waitPay'),
+      name: 'waitPay',
+      meta: { title: '待付款',icon: '待付款',keepAlive:true }
+    },
+    {
+      path: 'list/waitSend',
+      component: () => import('@/views/orders/list/waitSend'),
+      name: 'waitSend',
+      meta: { title: '待发货',icon: '待发货',keepAlive:true }
+    },
+    {
+      path: 'list/waitConfirm',
+      component: () => import('@/views/orders/list/waitConfirm'),
+      name: 'waitConfirm',
+      meta: { title: '待收货',icon: '待收货' ,keepAlive:true}
+    },
+    {
+      path: 'list/confirmed',
+      component: () => import('@/views/orders/list/confirmed'),
+      name: 'confirmed',
+      meta: { title: '已完成',icon: 'check surface' ,keepAlive:true}
+    },
+    {
+      path: 'list/closed',
+      component: () => import('@/views/orders/list/closed'),
+      name: 'closed',
+      meta: { title: '已关闭',icon: 'close',keepAlive:true }
+    },
+    {
+      path: 'list/refund',
+      component: () => import('@/views/orders/list/refund'),
+      name: 'refund',
+      meta: { title: '已退款',icon: '退款',keepAlive:true }
     },
     {
       path: 'detail',

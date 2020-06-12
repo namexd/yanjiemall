@@ -1,10 +1,14 @@
 <template>
   <section class="app-main">
-    <transition name="fade-transform" mode="out-in">
-      <keep-alive :include="cachedViews">
-        <router-view :key="key" />
-      </keep-alive>
-    </transition>
+<!--    <transition name="fade-transform" mode="out-in">-->
+<!--      <keep-alive >-->
+<!--        <router-view :key="key" />-->
+<!--      </keep-alive>-->
+    <keep-alive>
+      <router-view  v-if="$route.meta.keepAlive"></router-view>
+    </keep-alive>
+    <router-view v-if="!$route.meta.keepAlive"></router-view>
+<!--    </transition>-->
   </section>
 </template>
 
@@ -12,12 +16,12 @@
 export default {
   name: 'AppMain',
   computed: {
-    cachedViews() {
-      return this.$store.state.tagsView.cachedViews
-    },
-    key() {
-      return this.$route.path
-    }
+    // cachedViews() {
+    //   return this.$store.state.tagsView.cachedViews
+    // },
+    // key() {
+    //   return this.$route.path
+    // }
   }
 }
 </script>

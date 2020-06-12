@@ -34,7 +34,14 @@
           </el-col>
         </el-row>
         <el-row>
-          <el-col :span="8">
+          <el-col :span="6">
+            <el-form-item label="商品名称" class="postInfo-container-item" label-width="70px">
+              <el-input v-model="listQuery.goods_name" placeholder="请输入商品名称" clearable style="width: 50%"
+                        class="filter-item"
+                        @keyup.enter.native="handleFilter"/>
+            </el-form-item>
+          </el-col>
+          <el-col :span="6">
             <el-form-item label="订单类型" class="postInfo-container-item">
               <el-select v-model="listQuery.oder_type" placeholder="请选择" clearable class="filter-item"
                          style="width: 130px">
@@ -43,7 +50,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-form-item label="支付方式:" class="postInfo-container-item">
               <el-select v-model="listQuery.pay_type" placeholder="请选择" clearable class="filter-item"
                          style="width: 130px">
@@ -52,7 +59,7 @@
               </el-select>
             </el-form-item>
           </el-col>
-          <el-col :span="8">
+          <el-col :span="6">
             <el-button v-waves class="filter-item" type="primary" icon="el-icon-search" @click="handleFilter">
               搜索
             </el-button>
@@ -295,8 +302,8 @@
   import Pagination from '@/components/Pagination'
   import waves from '@/directive/waves' // waves directive
 
-  import { objectMerge } from '../../utils'
-  import { closeOrder, expressOrder, getExpress, getOrderPrice, getOrders, putOrderPrice } from '../../api/orders'
+  import { objectMerge } from '../../../utils'
+  import { closeOrder, expressOrder, getExpress, getOrderPrice, getOrders, putOrderPrice } from '../../../api/orders'
   const ordersFilter = {
     waitPay: {
       status: 1
@@ -343,6 +350,7 @@
   }, {})
 
   export default {
+    name: 'waitpay',
     components: { Pagination, Upload, Tinymce },
     directives: { waves },
     data() {
@@ -374,7 +382,8 @@
         dialogChangePriceVisible: false,
         listQuery: {
           page: 1,
-          per_page: 20
+          per_page: 20,
+          status: 1
         },
         expressForm: {
           id: 0,
@@ -406,7 +415,7 @@
         if (this.timeValue) {
           params[this.timeType] = this.timeValue
         }
-        params = objectMerge(ordersFilter[this.$route.name], params)
+
         const res = await getOrders(params)
         this.orderList = res.data.items
         this.total = res.data._meta.total_count
@@ -503,7 +512,6 @@
         })
       }
     },
-
   }
 </script>
 

@@ -22,7 +22,7 @@ const usersRouters = {
       path: 'list',
       component: () => import('@/views/users/list'),
       name: 'usersList',
-      meta: { title: '会员管理',icon: 'tree' }
+      meta: { title: '会员管理',icon: 'tree',keepAlive:true }
     },
     {
       path: 'level',

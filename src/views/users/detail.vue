@@ -41,7 +41,7 @@
   import { getUser } from '../../api/user'
 
   export default {
-    name: 'Detail',
+    name: 'userDetail',
     components: { UserInfo, UserAttr, UserDistribution, UserOrder },
     data() {
       return {

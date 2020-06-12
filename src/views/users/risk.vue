@@ -64,6 +64,7 @@
   import {
     getUserRisk,
   } from '../../api/user'
+  import { objectMerge } from '../../utils'
 
   const TypeOption = [
     { key: 'idcard', display_name: '身份证号' },
@@ -103,7 +104,7 @@
         const params={
           [this.searchQuery.key]:this.searchQuery.value
         }
-        const res = await getUserRisk(params)
+        const res = await getUserRisk(objectMerge(params,this.listQuery))
         this.list = res.data.items
         this.total = res.data._meta.total_count
         this.listLoading = false
