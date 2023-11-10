@@ -44,7 +44,7 @@
   },
   "dependencies": {
     "@baiducloud/bos-uploader": "^1.4.0-rc.0",
-    "axios": "0.18.1",
+    "axios": "1.6.0",
     "clipboard": "2.0.4",
     "codemirror": "5.45.0",
     "crypto-js": "^4.0.0",
